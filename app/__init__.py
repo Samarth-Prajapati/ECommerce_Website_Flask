@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from .config import Config
 import pymysql
@@ -30,5 +30,5 @@ with app.app_context():
 
 @app.route('/')
 def home():
-    return 'Home Page'
+    return render_template('home.html')
 
