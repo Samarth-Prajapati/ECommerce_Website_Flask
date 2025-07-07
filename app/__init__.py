@@ -20,10 +20,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{user}:{password}@{hos
 db = SQLAlchemy(app)
 
 # Importing models for Initialization of Tables
-# from .models import  
+from .models import Role, User, Category, Product, CartItem, Discount, Order, OrderItem, Invoice, Review, Report 
 
 with app.app_context():
-    db.create_all() 
+    try:
+        db.create_all() 
+    except Exception as e:
+        print(f"Error creating database tables: {e}")
 
 @app.route('/')
 def home():
