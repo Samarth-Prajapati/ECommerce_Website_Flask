@@ -2,6 +2,7 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from .config import Config
 import pymysql
+from .passwordHash import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
@@ -30,5 +31,21 @@ with app.app_context():
 
 @app.route('/')
 def home():
+
+    # SuperUser  
+    # user = User(
+    #         fname='SUPERUSER',
+    #         lname='ADMIN',
+    #         gender='MALE',
+    #         email='superuser.admin@gmail.com',
+    #         password=generate_password_hash('SUPERUSER'),
+    #         contact='9876543210',
+    #         address='ATUL',
+    #         city='VALSAD',
+    #         state='GUJARAT',
+    #         role_id=1, 
+    #     )
+    # db.session.add(user)
+    # db.session.commit()
     return render_template('home.html')
 

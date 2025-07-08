@@ -10,16 +10,16 @@ CREATE TABLE roles (
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     fname VARCHAR(100) NOT NULL,
-    lname VARCHAR(100),
-    gender VARCHAR(10),
+    lname VARCHAR(100) NOT NULL,
+    gender VARCHAR(10) NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    contact VARCHAR(20),
-    address TEXT,
-    city VARCHAR(100),
-    state VARCHAR(100),
+    password VARCHAR(255) UNIQUE NOT NULL,
+    contact VARCHAR(20) NOT NULL,
+    address TEXT NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    state VARCHAR(100) NOT NULL,
     is_active BOOLEAN DEFAULT 1,
-    role_id INTEGER NOT NULL,
+    role_id INTEGER DEFAULT 3,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (role_id) REFERENCES roles(id)
 );
@@ -27,18 +27,18 @@ CREATE TABLE users (
 CREATE TABLE categories (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(100) UNIQUE NOT NULL,
-    description TEXT
+    description TEXT NOT NULL
 );
 
 CREATE TABLE products (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(150) NOT NULL,
-    description TEXT,
+    description TEXT NOT NULL,
     price FLOAT NOT NULL,
     quantity INTEGER NOT NULL DEFAULT 0,
     available BOOLEAN DEFAULT 1,
     image VARCHAR(255),
-    category_id INTEGER,
+    category_id INTEGER NOT NULL,
     created_by INTEGER NOT NULL,
     is_active BOOLEAN DEFAULT 1,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -59,7 +59,7 @@ CREATE TABLE cart_items (
 CREATE TABLE discounts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(100) NOT NULL,
-    description TEXT,
+    description TEXT NOT NULL,
     discount_type VARCHAR(10) NOT NULL, 
     value FLOAT NOT NULL,
     is_active BOOLEAN DEFAULT 1,
@@ -72,9 +72,9 @@ CREATE TABLE orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     amount FLOAT NOT NULL,
-    status VARCHAR(50) DEFAULT 'pending',
-    invoice VARCHAR(255),
-    payment_id VARCHAR(100),
+    status VARCHAR(50) DEFAULT 'PENDING',
+    invoice VARCHAR(255) NOT NULL,
+    payment_id VARCHAR(100) NOT NULL,
     discount_id INTEGER,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id),
@@ -124,3 +124,7 @@ CREATE TABLE reports (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (generated_by) REFERENCES users(id)
 );
+
+INSERT INTO ROLES(NAME) VALUES('SUPERUSER');
+INSERT INTO ROLES(NAME) VALUES('PRODUCT MANAGER');
+INSERT INTO ROLES(NAME) VALUES('CUSTOMER');

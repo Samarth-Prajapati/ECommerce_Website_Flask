@@ -4,25 +4,25 @@ import enum
 
 # Enum for gender
 class Gender(enum.Enum):
-    male = 'male'
-    female = 'female'
-    others = 'others'
+    MALE = 'MALE'
+    FEMALE = 'FEMALE'
+    OTHERS = 'OTHERS'
 
 # Enum for discount_type
 class DiscountType(enum.Enum):
-    flat = 'flat'
-    percent = 'percent'
+    FLAT = 'FLAT'
+    PERCENT = 'PERCENT'
 
 # Enum for order status
 class OrderStatus(enum.Enum):
-    pending = 'pending'
-    success = 'success'
-    canceled = 'canceled'
+    PENDING = 'PENDING'
+    SUCCESS = 'SUCCESS'
+    CANCELED = 'CANCELED'
 
 # Enum for report type
 class ReportType(enum.Enum):
-    product_report = 'product_report'
-    user_report = 'user_report'
+    PRODUCT_REPORT = 'PRODUCT_REPORT'
+    USER_REPORT = 'USER_REPORT'
 
 # Role DB Model
 class Role(db.Model):
@@ -36,16 +36,16 @@ class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     fname = db.Column(db.String(100), nullable=False)
-    lname = db.Column(db.String(100))
-    gender = db.Column(db.Enum(Gender), nullable=True)
+    lname = db.Column(db.String(100), nullable=False)
+    gender = db.Column(db.Enum(Gender), nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
-    contact = db.Column(db.String(20))
-    address = db.Column(db.Text)
-    city = db.Column(db.String(100))
-    state = db.Column(db.String(100))
+    password = db.Column(db.String(255), unique = True, nullable=False)
+    contact = db.Column(db.String(20), nullable=False)
+    address = db.Column(db.Text, nullable=False)
+    city = db.Column(db.String(100), nullable=False)
+    state = db.Column(db.String(100), nullable=False)
     is_active = db.Column(db.Boolean, default=True)
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False)
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), default = 3, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     products = db.relationship('Product', backref='creator', lazy=True)
     cart_items = db.relationship('CartItem', backref='user', lazy=True)
@@ -58,7 +58,7 @@ class Category(db.Model):
     __tablename__ = 'categories'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
-    description = db.Column(db.Text)
+    description = db.Column(db.Text, nullable=False)
     products = db.relationship('Product', backref='category', lazy=True)
 
 # Product DB Model
@@ -66,12 +66,12 @@ class Product(db.Model):
     __tablename__ = 'products'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
-    description = db.Column(db.Text)
+    description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable=False)
     quantity = db.Column(db.Integer, default=0, nullable=False)
     available = db.Column(db.Boolean, default=True)
     image = db.Column(db.String(255))
-    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
     created_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -93,7 +93,7 @@ class Discount(db.Model):
     __tablename__ = 'discounts'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text)
+    description = db.Column(db.Text, nullable=False)
     discount_type = db.Column(db.Enum(DiscountType), nullable=False)
     value = db.Column(db.Float, nullable=False)
     is_active = db.Column(db.Boolean, default=True)
@@ -107,9 +107,9 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    status = db.Column(db.Enum(OrderStatus), default=OrderStatus.pending, nullable=False)
-    invoice = db.Column(db.String(255))
-    payment_id = db.Column(db.String(100))
+    status = db.Column(db.Enum(OrderStatus), default=OrderStatus.PENDING, nullable=False)
+    invoice = db.Column(db.String(255), nullable=False)
+    payment_id = db.Column(db.String(100), nullable=False)
     discount_id = db.Column(db.Integer, db.ForeignKey('discounts.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     order_items = db.relationship('OrderItem', backref='order', lazy=True)
