@@ -34,83 +34,133 @@
     />
   </head>
   <body>
-    <!-- header  -->
-    <nav class="navbar bg-dark">
-      <div class="container-fluid">
-        <a class="navbar-brand m-2" href="#">
-          <img
-            src="{{ url_for('static', filename='images/icon/icon-new.svg') }}"
-            alt="Logo"
-            width="30"
-            height="24"
-            class="d-inline-block align-text-top"
-          />
-          <strong class="title">Shopify</strong>
-        </a>
-        <ul class="nav justify-content-end">
-          <li class="nav-item">
-            <a class="nav-link active text-white" aria-current="page" href="#"
+    <!-- header   -->
+    <header>
+      <nav class="navbar bg-dark p-3">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{{ url_for('main.home') }}">
+            <img
+              src="{{ url_for('static',
+              filename='images/icon/icon-new.svg') }}"
+              alt="Logo"
+              width="30"
+              height="24"
+              class="d-inline-block align-text-top"
+            />
+            <strong class="mx-2 text-white">SHOPIFY</strong>
+          </a>
+          <nav class="nav justify-content-end">
+            <a
+              class="nav-link active text-light"
+              aria-current="page"
+              href="{{ url_for('main.home') }}"
               >Home</a
             >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-white" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-white" href="#">Link</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-    {% block body %}{% endblock %}
+            <a class="nav-link text-light" href="#">Link</a>
+            <a class="nav-link text-light" href="#">Link</a>
+            <a class="nav-link text-light" href="#">Link</a>
+            {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('auth.login') }}"
+              ><button
+                class="btn btn-light border border-2 border-dark mx-2"
+                type="submit"
+              >
+                Login
+              </button></a
+            >
+            <a href="{{ url_for('auth.register') }}">
+              <button
+                class="btn btn-light border border-2 border-dark"
+                type="submit"
+              >
+                Register
+              </button>
+            </a>
+            {% endif %} {% if current_user.is_authenticated %}
+            <a href="{{ url_for('auth.logout') }}">
+              <button
+                class="btn btn-light border border-2 border-dark"
+                type="submit"
+              >
+                Logout
+              </button>
+            </a>
+            {% endif %}
+          </nav>
+        </div>
+      </nav>
+    </header>
 
-    <!-- footer   -->
-    <footer class="site-footer">
-      <div class="container py-3">
+    <!-- Main Content -->
+    {% block body %} {% endblock %}
+
+    <!-- Footer   -->
+    <footer class="bg-dark text-light py-3">
+      <div class="container">
         <div class="row">
-          <div class="col-md-4 mb-2">
-            <h5>
-              About Shopify
-              <img
-                src="{{ url_for('static', filename='images/icon/icon-new.svg') }}"
-                alt="Logo"
-                width="30"
-                height="24"
-                class="d-inline-block align-text-top"
-              />
-            </h5>
-            <p>Your one-stop shop for amazing products at great prices.</p>
-          </div>
-          <div class="col-md-4 mb-2">
-            <h5>Quick Links</h5>
-            <ul class="footer-links">
-              <li><a href="#">Home</a></li>
-              <li><a href="#">Products</a></li>
-              <li><a href="#">About Us</a></li>
-              <li><a href="#">Contact</a></li>
+          <div class="col-md-4 mb-3">
+            <a class="navbar-brand text-white" href="{{ url_for('main.home') }}"
+              ><img
+                src="{{ url_for('static',
+              filename='images/icon/icon-new.svg') }}"
+                class="logo"
+                alt=""
+              /><strong class="mx-2">SHOPIFY</strong></a
+            >
+            <ul class="list-unstyled">
+              <li>
+                <a
+                  href="{{ url_for('main.home') }}"
+                  class="text-decoration-none text-white"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a href="" class="text-decoration-none text-white">FAQ</a>
+              </li>
+              <li>
+                <a href="" class="text-decoration-none text-white">About</a>
+              </li>
             </ul>
           </div>
-          <div class="col-md-4 mb-2">
-            <h5>Contact Us</h5>
-            <p>
-              Email: support@mystore.com<br />
-              Phone: +1 (555) 123-4567
-            </p>
-            <div class="social-icons mt-2">
-              <a href="#" aria-label="Facebook">
-                <i class="bi bi-facebook"></i>
-              </a>
-              <a href="#" aria-label="Twitter">
-                <i class="bi bi-twitter"></i>
-              </a>
-              <a href="#" aria-label="Instagram">
-                <i class="bi bi-instagram"></i>
-              </a>
-            </div>
+          <div class="col-md-4 mb-3">
+            <h5>Policies</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="" class="text-decoration-none text-white"
+                  >Privacy Policy</a
+                >
+              </li>
+              <li>
+                <a href="" class="text-decoration-none text-white"
+                  >Terms of Services</a
+                >
+              </li>
+              <li>
+                <a href="" class="text-decoration-none text-white"
+                  >Return Policy</a
+                >
+              </li>
+            </ul>
           </div>
-        </div>
-        <div class="text-center">
-          <p>&copy; 2025 Shopify. All rights reserved.</p>
+          <div class="col-md-4 mb-3">
+            <h5>Subscribe to Our Newsletter</h5>
+            <p>Stay updated with the latest trends and offers!</p>
+            <form class="input-group">
+              <input
+                type="email"
+                class="form-control"
+                placeholder="Enter your email"
+                aria-label="Email for newsletter"
+              />
+              <button
+                class="btn btn-dark border border-2 border-light"
+                type="submit"
+              >
+                Submit
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </footer>

@@ -1,6 +1,7 @@
 from app import db
 from datetime import datetime
 import enum
+from flask_login import UserMixin
 
 # Enum for gender
 class Gender(enum.Enum):
@@ -32,7 +33,7 @@ class Role(db.Model):
     users = db.relationship('User', backref='role', lazy=True)
 
 # User DB Model
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     fname = db.Column(db.String(100), nullable=False)
@@ -52,6 +53,21 @@ class User(db.Model):
     orders = db.relationship('Order', backref='user', lazy=True)
     reviews = db.relationship('Review', backref='user', lazy=True)
     reports = db.relationship('Report', backref='generator', lazy=True)
+
+    # @property
+    # def is_authenticated(self):
+    #     return True
+
+    # @property
+    # def is_anonymous(self):
+    #     return False
+
+    # @property
+    # def is_active(self):
+    #     return self.is_active
+
+    # def get_id(self):
+    #     return str(self.id)
 
 # Category DB Model
 class Category(db.Model):

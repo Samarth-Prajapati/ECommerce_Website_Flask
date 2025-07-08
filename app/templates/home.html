@@ -1,3 +1,172 @@
 {% extends 'base.html' %} {% block title %}Home{% endblock %} {% block body %}
-<h3>Home Page</h3>
+<main>
+  <!-- Carousel Section -->
+  <section>
+    <div
+      id="carouselExampleAutoplaying"
+      class="carousel slide"
+      data-bs-ride="carousel"
+    >
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img
+            src="{{ url_for('static',
+              filename='images/carousel/4.jpg') }}"
+            class="d-block w-100"
+            alt="..."
+          />
+          <div
+            class="carousel-caption d-none d-md-block bg-light rounded-5 opacity-50 text-dark"
+          >
+            <h5>Shopify Collection</h5>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img
+            src="{{ url_for('static',
+              filename='images/carousel/1.jpg') }}"
+            class="d-block w-100"
+            alt="..."
+          />
+          <div
+            class="carousel-caption d-none d-md-block bg-light rounded-5 opacity-50 text-dark"
+          >
+            <h5>Kid's Wear</h5>
+            <p>Shop for your kids with our latest collection</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img
+            src="{{ url_for('static',
+              filename='images/carousel/2.jpg') }}"
+            class="d-block w-100"
+            alt="..."
+          />
+          <div
+            class="carousel-caption d-none d-md-block bg-light rounded-5 opacity-50 text-dark"
+          >
+            <h5>Men's Wear</h5>
+            <p>Shop for your men with our latest collection</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img
+            src="{{ url_for('static',
+              filename='images/carousel/3.jpg') }}"
+            class="d-block w-100"
+            alt="..."
+          />
+          <div
+            class="carousel-caption d-none d-md-block bg-light rounded-5 opacity-50 text-dark"
+          >
+            <h5>Women's Wear</h5>
+            <p>Shop for your women with our latest collection</p>
+          </div>
+        </div>
+      </div>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#carouselExampleAutoplaying"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#carouselExampleAutoplaying"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Category Section  -->
+  <section class="collections">
+    <div class="container">
+      <br />
+      <h2 class="text-center text-light fw-bold">Discover Clothing</h2>
+      <br />
+      <div class="row justify-content-center">
+        <div class="col-auto mb-4">
+          <div class="card" style="width: 18rem">
+            <img
+              src="{{ url_for('static',
+              filename='images/start shopping section/men-tshirt.jpg') }}"
+              class="card-img-top"
+              alt="..."
+            />
+            <div class="card-body">
+              <p class="card-text text-center">Men</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-auto mb-4">
+          <div class="card" style="width: 18rem">
+            <img
+              src="{{ url_for('static',
+              filename='images/start shopping section/girls.jpg') }}"
+              class="card-img-top"
+              alt="..."
+            />
+            <div class="card-body">
+              <p class="card-text text-center">Women</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-auto mb-4">
+          <div class="card" style="width: 18rem">
+            <img
+              src="{{ url_for('static',
+              filename='images/start shopping section/kids.jpg') }}"
+              class="card-img-top"
+              alt="..."
+            />
+            <div class="card-body">
+              <p class="card-text text-center">Kids</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+  </section>
+
+  <!-- Start Shopping Section -->
+  <section>
+    <div class="container my-5">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <img
+            src="{{ url_for('static',
+              filename='images/start shopping section/x.jpg') }}"
+            class="img-fluid w-100 border border-5 border-secondary rounded-5"
+            alt=""
+          />
+        </div>
+        <div class="col-md-6">
+          <div class="p-4">
+            <h2>Start Shopping Now</h2>
+            <p>
+              Elevate your style with our latest collection and trendy clothes
+              for men, women and kids. Lorem ipsum dolor sit amet, consectetur
+              adipisicing elit. Unde qui optio eligendi hic numquam,
+              exercitationem eveniet, sed veritatis cum perspiciatis quaerat
+              voluptatibus? Rerum, consequuntur officiis velit explicabo quidem
+              alias perferendis aperiam quasi ad quae qui. Laudantium optio
+              illum rem unde?
+            </p>
+            <a href="" class="btn btn-dark border border-2 border-light"
+              >Shop Now</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
 {% endblock %}

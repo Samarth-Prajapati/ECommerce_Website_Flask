@@ -1,0 +1,138 @@
+{% extends 'base.html' %} {% block title %}Register{% endblock %} {% block body
+%} {% with messages = get_flashed_messages(with_categories=true) %} {% if
+messages %} {% for category, message in messages %} {% if category == 'success'
+or category == 'danger' %}
+<div
+  class="alert alert-{{ category }} mt-3 alert-dismissible fade show"
+  role="alert"
+>
+  {{ message | safe }}
+  <button
+    type="button"
+    class="btn-close"
+    data-bs-dismiss="alert"
+    aria-label="Close"
+  ></button>
+</div>
+{% endif %} {% endfor %} {% endif %} {% endwith %}
+<div class="container my-5">
+  <div
+    class="card mx-auto w-50 w-md-25 p-4 shadow-sm border border-2 border-secondary rounded-5"
+  >
+    <h2 class="text-center mb-4 text-dark fw-bold">
+      <i class="bi bi-person-plus me-2"></i>Register
+    </h2>
+    <form
+      method="POST"
+      action="{{ url_for('auth.register') }}"
+      class="justify-content-center"
+    >
+      {{ form.hidden_tag() }}
+
+      <div class="mb-3">
+        {{ form.fname.label(class="form-label text-dark fw-semibold") }} {{
+        form.fname(class="form-control bg-light text-dark border-secondary
+        rounded-4", placeholder="Enter your first name") }} {% if
+        form.fname.errors %} {% for error in form.fname.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.lname.label(class="form-label text-dark fw-semibold") }} {{
+        form.lname(class="form-control bg-light text-dark border-secondary
+        rounded-4", placeholder="Enter your last name") }} {% if
+        form.lname.errors %} {% for error in form.lname.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.gender.label(class="form-label text-dark fw-semibold") }} {{
+        form.gender(class="form-select bg-light text-dark border-secondary
+        rounded-4") }} {% if form.gender.errors %} {% for error in
+        form.gender.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.email.label(class="form-label text-dark fw-semibold") }} {{
+        form.email(class="form-control bg-light text-dark border-secondary
+        rounded-4", placeholder="Enter your email") }} {% if form.email.errors
+        %} {% for error in form.email.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.password.label(class="form-label text-dark fw-semibold") }} {{
+        form.password(class="form-control bg-light text-dark border-secondary
+        rounded-4", placeholder="Enter your password") }} {% if
+        form.password.errors %} {% for error in form.password.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.confirm_password.label(class="form-label text-dark fw-semibold")
+        }} {{ form.confirm_password(class="form-control bg-light text-dark
+        border-secondary rounded-4", placeholder="Confirm your password") }} {%
+        if form.confirm_password.errors %} {% for error in
+        form.confirm_password.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.contact.label(class="form-label text-dark fw-semibold") }} {{
+        form.contact(class="form-control bg-light text-dark border-secondary
+        rounded-4", placeholder="Enter your contact number") }} {% if
+        form.contact.errors %} {% for error in form.contact.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.address.label(class="form-label text-dark fw-semibold") }} {{
+        form.address(class="form-control bg-light text-dark border-secondary
+        rounded-4", placeholder="Enter your address") }} {% if
+        form.address.errors %} {% for error in form.address.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.city.label(class="form-label text-dark fw-semibold") }} {{
+        form.city(class="form-control bg-light text-dark border-secondary
+        rounded-4", placeholder="Enter your city") }} {% if form.city.errors %}
+        {% for error in form.city.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="mb-4">
+        {{ form.state.label(class="form-label text-dark fw-semibold") }} {{
+        form.state(class="form-control bg-light text-dark border-secondary
+        rounded-4", placeholder="Enter your state") }} {% if form.state.errors
+        %} {% for error in form.state.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="d-grid mb-3">
+        {{ form.submit(class="btn btn-dark text-light fw-bold rounded-4") }}
+      </div>
+    </form>
+
+    <p class="text-center text-dark mb-0">
+      Already have an account?
+      <a
+        href="{{ url_for('auth.login') }}"
+        class="text-dark fw-semibold text-decoration-underline"
+        >Log in</a
+      >
+    </p>
+  </div>
+</div>
+{% endblock %}

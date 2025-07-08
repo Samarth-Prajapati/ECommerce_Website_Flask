@@ -1,8 +1,11 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, session, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from .config import Config
 import pymysql
 from .passwordHash import generate_password_hash, check_password_hash
+from .forms import LoginForm, RegisterForm
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__)
 
@@ -20,8 +23,20 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{user}:{password}@{hos
 # Initializing SQLAlchemy
 db = SQLAlchemy(app)
 
+# Login Manager 
+csrf = CSRFProtect(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
 # Importing models for Initialization of Tables
 from .models import Role, User, Category, Product, CartItem, Discount, Order, OrderItem, Invoice, Review, Report 
+
+# Loading user for Flask-Login
+@login_manager.user_loader
+def load_user(user_id):
+    from .models import User
+    return User.query.get(int(user_id))
 
 with app.app_context():
     try:
@@ -29,23 +44,7 @@ with app.app_context():
     except Exception as e:
         print(f"Error creating database tables: {e}")
 
-@app.route('/')
-def home():
+from .routes import register_blueprints
 
-    # SuperUser  
-    # user = User(
-    #         fname='SUPERUSER',
-    #         lname='ADMIN',
-    #         gender='MALE',
-    #         email='superuser.admin@gmail.com',
-    #         password=generate_password_hash('SUPERUSER'),
-    #         contact='9876543210',
-    #         address='ATUL',
-    #         city='VALSAD',
-    #         state='GUJARAT',
-    #         role_id=1, 
-    #     )
-    # db.session.add(user)
-    # db.session.commit()
-    return render_template('home.html')
-
+# Registering Blueprints
+register_blueprints(app)
