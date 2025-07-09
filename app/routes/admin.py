@@ -12,16 +12,19 @@ admin_bp = Blueprint('admin', __name__, url_prefix = '/admin')
 def dashboard():
     if not current_user.is_authenticated or current_user.role_id != 1:
         return redirect(url_for('main.home'))
+    return render_template('admin/dashboard.html', title='admin')
+
+# Add Product Manager  
+@admin_bp.route('/dashboard/add_product_manager', methods=['GET', 'POST'])
+@login_required
+def add_product_manager():
     form = RegisterForm()
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
         if User.query.filter_by(email=email).first():
-            flash('Email Already Registered...', 'register_pm')
-            return render_template('admin/dashboard.html', form=form, title='admin')
-        if User.query.filter_by(password=generate_password_hash(password)).first():
-            flash('Password Already Used...', 'register_pm')
-            return render_template('admin/dashboard.html', form=form, title='admin')
+            flash('Email Already Registered...', 'add_product_manager')
+            return render_template('admin/add_product_manager.html', form=form, title='add_product_manager')
         user = User(
             fname=form.fname.data.upper(),
             lname=form.lname.data.upper(),
@@ -37,5 +40,6 @@ def dashboard():
         )
         db.session.add(user)
         db.session.commit()
-        flash('Registration Successful...', 'register_pm')
-    return render_template('admin/dashboard.html', form = form,title='admin')
+        flash('Registration Successful...', 'register_pm1')
+        return redirect(url_for('admin.dashboard'))
+    return render_template('admin/add_product_manager.html', form=form, title='add_product_manager')

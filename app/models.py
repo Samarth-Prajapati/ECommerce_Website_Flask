@@ -40,7 +40,7 @@ class User(db.Model, UserMixin):
     lname = db.Column(db.String(100), nullable=False)
     gender = db.Column(db.Enum(Gender), nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(255), unique = True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
     contact = db.Column(db.String(20), nullable=False)
     address = db.Column(db.Text, nullable=False)
     city = db.Column(db.String(100), nullable=False)
@@ -53,21 +53,6 @@ class User(db.Model, UserMixin):
     orders = db.relationship('Order', backref='user', lazy=True)
     reviews = db.relationship('Review', backref='user', lazy=True)
     reports = db.relationship('Report', backref='generator', lazy=True)
-
-    # @property
-    # def is_authenticated(self):
-    #     return True
-
-    # @property
-    # def is_anonymous(self):
-    #     return False
-
-    # @property
-    # def is_active(self):
-    #     return self.is_active
-
-    # def get_id(self):
-    #     return str(self.id)
 
 # Category DB Model
 class Category(db.Model):

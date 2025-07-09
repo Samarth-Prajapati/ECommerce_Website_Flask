@@ -5,7 +5,7 @@
 <div class="toast-container position-fixed top-5 p-2" style="z-index: 1080">
   {% with messages = get_flashed_messages(with_categories=true) %} {% if
   messages %} {% for category, message in messages %} {% if category ==
-  'register1' %}
+  'add_product_manager' %}
   <div
     class="toast align-items-center text-white bg-secondary border-0"
     role="alert"
@@ -30,11 +30,11 @@
     class="card mx-auto w-50 w-md-25 p-4 shadow-sm border border-2 border-secondary rounded-5"
   >
     <h2 class="text-center mb-4 text-dark fw-bold">
-      <i class="bi bi-person-plus me-2"></i>Register
+      <i class="bi bi-person-plus me-2"></i>Register Product Manager
     </h2>
     <form
       method="POST"
-      action="{{ url_for('auth.register') }}"
+      action="{{ url_for('admin.add_product_manager') }}"
       class="justify-content-center"
     >
       {{ form.hidden_tag() }}
@@ -134,15 +134,6 @@
         {{ form.submit(class="btn btn-dark text-light fw-bold rounded-4") }}
       </div>
     </form>
-
-    <p class="text-center text-dark mb-0">
-      Already have an account?
-      <a
-        href="{{ url_for('auth.login') }}"
-        class="text-dark fw-semibold text-decoration-underline"
-        >Log in</a
-      >
-    </p>
   </div>
 </div>
 {% endblock %}

@@ -1,26 +1,11 @@
 {% extends 'base.html' %} {% block title %}Admin Dashboard{% endblock %} {%
 block body %}
-<div class="container my-2">
-  <h4 class="text-dark text-center fw-bold">ADMIN PANEL</h4>
-</div>
-
-<!-- Registration Button   -->
-<div class="container my-2 d-flex justify-content-end">
-  <button
-    class="btn btn-dark border border-2 border-light justify-content-end"
-    type="button"
-    data-bs-toggle="modal"
-    data-bs-target="#addPMModal"
-  >
-    Register Product Manager
-  </button>
-</div>
 
 <!-- Toast Notification -->
 <div class="toast-container position-fixed top-5 p-2" style="z-index: 1080">
   {% with messages = get_flashed_messages(with_categories=true) %} {% if
   messages %} {% for category, message in messages %} {% if category ==
-  'register_pm' %}
+  'register_pm1' %}
   <div
     class="toast align-items-center text-white bg-secondary border-0"
     role="alert"
@@ -40,146 +25,21 @@ block body %}
   {% endif %} {% endfor %} {% endif %} {% endwith %}
 </div>
 
-<div class="container">
-  <div
-    class="modal fade"
-    id="addPMModal"
-    tabindex="-1"
-    aria-labelledby="addPMLabel"
-    aria-hidden="true"
-  >
-    <!-- Modal  -->
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title fw-bold" id="addPMLabel">
-            <i class="bi bi-person-plus me-2"></i>Add Product Manager
-          </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="modal-body">
-          <!-- Form  -->
-          <form
-            method="POST"
-            action="{{ url_for('admin.dashboard') }}"
-            class="justify-content-center"
-          >
-            {{ form.hidden_tag() }}
-            <div class="row g-3">
-              <div class="col-md-6 mb-1">
-                {{ form.fname.label(class="form-label text-dark fw-semibold") }}
-                {{ form.fname(class="form-control bg-light text-dark
-                border-secondary rounded-4", placeholder="Enter first name") }}
-                {% if form.fname.errors %} {% for error in form.fname.errors %}
-                <div class="text-danger small mt-1">{{ error }}</div>
-                {% endfor %} {% endif %}
-              </div>
-
-              <div class="col-md-6 mb-1">
-                {{ form.lname.label(class="form-label text-dark fw-semibold") }}
-                {{ form.lname(class="form-control bg-light text-dark
-                border-secondary rounded-4", placeholder="Enter last name") }}
-                {% if form.lname.errors %} {% for error in form.lname.errors %}
-                <div class="text-danger small mt-1">{{ error }}</div>
-                {% endfor %} {% endif %}
-              </div>
-
-              <div class="col-md-6 mb-1">
-                {{ form.gender.label(class="form-label text-dark fw-semibold")
-                }} {{ form.gender(class="form-select bg-light text-dark
-                border-secondary rounded-4") }} {% if form.gender.errors %} {%
-                for error in form.gender.errors %}
-                <div class="text-danger small mt-1">{{ error }}</div>
-                {% endfor %} {% endif %}
-              </div>
-
-              <div class="col-md-6 mb-1">
-                {{ form.email.label(class="form-label text-dark fw-semibold") }}
-                {{ form.email(class="form-control bg-light text-dark
-                border-secondary rounded-4", placeholder="Enter email") }} {% if
-                form.email.errors %} {% for error in form.email.errors %}
-                <div class="text-danger small mt-1">{{ error }}</div>
-                {% endfor %} {% endif %}
-              </div>
-
-              <div class="col-md-6 mb-1">
-                {{ form.password.label(class="form-label text-dark fw-semibold")
-                }} {{ form.password(class="form-control bg-light text-dark
-                border-secondary rounded-4", placeholder="Enter password") }} {%
-                if form.password.errors %} {% for error in form.password.errors
-                %}
-                <div class="text-danger small mt-1">{{ error }}</div>
-                {% endfor %} {% endif %}
-              </div>
-
-              <div class="col-md-6 mb-1">
-                {{ form.confirm_password.label(class="form-label text-dark
-                fw-semibold") }} {{ form.confirm_password(class="form-control
-                bg-light text-dark border-secondary rounded-4",
-                placeholder="Confirm password") }} {% if
-                form.confirm_password.errors %} {% for error in
-                form.confirm_password.errors %}
-                <div class="text-danger small mt-1">{{ error }}</div>
-                {% endfor %} {% endif %}
-              </div>
-
-              <div class="col-md-6 mb-1">
-                {{ form.contact.label(class="form-label text-dark fw-semibold")
-                }} {{ form.contact(class="form-control bg-light text-dark
-                border-secondary rounded-4", placeholder="Enter contact number")
-                }} {% if form.contact.errors %} {% for error in
-                form.contact.errors %}
-                <div class="text-danger small mt-1">{{ error }}</div>
-                {% endfor %} {% endif %}
-              </div>
-
-              <div class="col-md-6 mb-1">
-                {{ form.address.label(class="form-label text-dark fw-semibold")
-                }} {{ form.address(class="form-control bg-light text-dark
-                border-secondary rounded-4", placeholder="Enter address") }} {%
-                if form.address.errors %} {% for error in form.address.errors %}
-                <div class="text-danger small mt-1">{{ error }}</div>
-                {% endfor %} {% endif %}
-              </div>
-
-              <div class="col-md-6 mb-3">
-                {{ form.city.label(class="form-label text-dark fw-semibold") }}
-                {{ form.city(class="form-control bg-light text-dark
-                border-secondary rounded-4", placeholder="Enter city") }} {% if
-                form.city.errors %} {% for error in form.city.errors %}
-                <div class="text-danger small mt-1">{{ error }}</div>
-                {% endfor %} {% endif %}
-              </div>
-
-              <div class="col-md-6 mb-3">
-                {{ form.state.label(class="form-label text-dark fw-semibold") }}
-                {{ form.state(class="form-control bg-light text-dark
-                border-secondary rounded-4", placeholder="Enter state") }} {% if
-                form.state.errors %} {% for error in form.state.errors %}
-                <div class="text-danger small mt-1">{{ error }}</div>
-                {% endfor %} {% endif %}
-              </div>
-            </div>
-
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-dark rounded-4"
-                data-bs-dismiss="modal"
-              >
-                Cancel
-              </button>
-              {{ form.submit(class="btn btn-dark rounded-4") }}
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="container my-2">
+  <h4 class="text-dark text-center fw-bold">ADMIN PANEL</h4>
 </div>
+
+<!-- Registration Button   -->
+<div class="container my-2 d-flex justify-content-end">
+  <a href="{{ url_for('admin.add_product_manager') }}">
+    <button
+      class="btn btn-dark border border-2 border-light justify-content-end"
+      type="button"
+    >
+      Register Product Manager
+    </button>
+  </a>
+</div>
+
+<div class="container"></div>
 {% endblock %}

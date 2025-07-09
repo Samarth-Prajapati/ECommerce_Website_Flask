@@ -27,7 +27,7 @@ def login():
                 return redirect(url_for('main.home'))
             return redirect(url_for('main.home'))
         else:
-            flash('Invalid Email or Password', 'login')
+            flash('Invalid Email or Password', 'login1')
     return render_template('login.html', form=form, title='Login')
 
 # Register  
@@ -41,10 +41,7 @@ def register():
         email = form.email.data
         password = form.password.data
         if User.query.filter_by(email=email).first():
-            flash('Email Already Registered...', 'register')
-            return render_template('register.html', form=form, title='Register')
-        if User.query.filter_by(password=generate_password_hash(password)).first():
-            flash('Password Already Used...', 'register')
+            flash('Email Already Registered...', 'register1')
             return render_template('register.html', form=form, title='Register')
         user = User(
             fname=form.fname.data.upper(),
