@@ -4,7 +4,6 @@ main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def home():
-
     # SuperUser  
     # user = User(
     #         fname='SUPERUSER',
