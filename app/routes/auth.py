@@ -11,7 +11,7 @@ auth_bp = Blueprint('auth', __name__, url_prefix = '/auth')
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        flash('You Are Already Logged In...', 'info')
+        flash('You Are Already Logged In...', 'login')
         return redirect(url_for('main.home'))
     form = LoginForm()
     if form.validate_on_submit():
@@ -20,31 +20,31 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
             login_user(user, remember=False)
-            flash('Login Successful...', 'success')
+            flash('Login Successful...', 'login')
             if user.role_id == 1:
                 return redirect(url_for('main.home'))
             elif user.role_id == 2:
                 return redirect(url_for('main.home'))
             return redirect(url_for('main.home'))
         else:
-            flash('Invalid Email or Password', 'danger')
+            flash('Invalid Email or Password', 'login')
     return render_template('login.html', form=form, title='Login')
 
 # Register  
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        flash('You Are Already Logged In...', 'info')
+        flash('You Are Already Logged In...', 'register')
         return redirect(url_for('main.home'))
     form = RegisterForm()
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
         if User.query.filter_by(email=email).first():
-            flash('Email Already Registered...', 'danger')
+            flash('Email Already Registered...', 'register')
             return render_template('register.html', form=form, title='Register')
         if User.query.filter_by(password=generate_password_hash(password)).first():
-            flash('Password Already Used...', 'danger')
+            flash('Password Already Used...', 'register')
             return render_template('register.html', form=form, title='Register')
         user = User(
             fname=form.fname.data.upper(),
@@ -61,7 +61,7 @@ def register():
         )
         db.session.add(user)
         db.session.commit()
-        flash('Registration Successful! Please Log In...', 'success')
+        flash('Registration Successful! Please Log In...', 'register')
         return redirect(url_for('auth.login'))
     return render_template('register.html', form=form, title='Register')
 
@@ -70,6 +70,6 @@ def register():
 @login_required
 def logout():
     logout_user()
-    flash('Logged Out Successfully...', 'success')
+    flash('Logged Out Successfully...', 'logout')
     return redirect(url_for('auth.login'))
 
