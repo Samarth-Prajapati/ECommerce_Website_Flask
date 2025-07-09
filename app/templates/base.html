@@ -86,6 +86,17 @@
               <i class="bi bi-person-circle text-white ml-2"></i> SUPERUSER
             </div>
 
+            {% endif %} {% if current_user.role_id == 2 %}
+            <div class="text-white m-2">
+              <i class="bi bi-person-circle text-white ml-2"></i>
+              {{ current_user.fname }} ( PRODUCT MANAGER )
+            </div>
+            {% endif %} {% if current_user.role_id == 3 %}
+            <div class="text-white m-2">
+              <i class="bi bi-person-circle text-white ml-2"></i> {{
+              current_user.fname }}
+            </div>
+
             {% endif %}
             <a href="{{ url_for('auth.logout') }}">
               <button
