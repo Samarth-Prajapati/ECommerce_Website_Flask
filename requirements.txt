@@ -27,6 +27,7 @@ asttokens @ file:///opt/conda/conda-bld/asttokens_1646925590279/work
 async-lru @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/async-lru_1701796859357/work
 atomicwrites==1.4.0
 attrs @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/attrs_1699473735254/work
+Authlib==1.6.0
 Automat @ file:///tmp/build/80754af9/automat_1600298431173/work
 autopep8 @ file:///croot/autopep8_1708962882016/work
 Babel @ file:///C:/Users/dev-admin/perseverance-python-buildout/croot/babel_1699475785740/work

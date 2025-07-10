@@ -1,4 +1,7 @@
 from flask import Blueprint, render_template
+from app import db
+from app.models import User
+from ..passwordHash import generate_password_hash
 
 main_bp = Blueprint('main', __name__)
 
