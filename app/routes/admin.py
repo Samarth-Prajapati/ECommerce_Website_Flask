@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import current_user, login_required
 from ..forms import RegisterForm
-from ..models import User
+from ..models import User, Product
 from .. import db
 from .. passwordHash import generate_password_hash, check_password_hash
 
@@ -12,7 +12,11 @@ admin_bp = Blueprint('admin', __name__, url_prefix = '/admin')
 def dashboard():
     if not current_user.is_authenticated or current_user.role_id != 1:
         return redirect(url_for('main.home'))
-    return render_template('admin/dashboard.html', title='admin')
+    users = User.query.filter_by(is_active=True).all()
+    productManager_count = User.query.filter_by(role_id=2).count()
+    customer_count = User.query.filter_by(role_id=3).count()
+    product_count = Product.query.count()
+    return render_template('admin/dashboard.html',users = users, productManager_count = productManager_count, customer_count = customer_count, product_count = product_count, title='admin')
 
 # Add Product Manager  
 @admin_bp.route('/dashboard/add_product_manager', methods=['GET', 'POST'])
@@ -22,7 +26,7 @@ def add_product_manager():
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
-        if User.query.filter_by(email=email).first():
+        if User.query.filter_by(email=email).first() and User.query.filter_by(email=email).first().is_active:
             flash('Email Already Registered...', 'add_product_manager')
             return render_template('admin/add_product_manager.html', form=form, title='add_product_manager')
         user = User(
@@ -43,3 +47,19 @@ def add_product_manager():
         flash('Registration Successful...', 'register_pm1')
         return redirect(url_for('admin.dashboard'))
     return render_template('admin/add_product_manager.html', form=form, title='add_product_manager')
+
+# Delete 
+@admin_bp.route('/dashboard/delete/<int:id>', methods=['GET'])
+@login_required
+def delete(id):
+    if not current_user.is_authenticated or current_user.role_id != 1:
+        return redirect(url_for('main.home'))
+    user = User.query.get_or_404(id)
+    if user.role_id == 1:
+        flash('Cannot Deactivate Admin User', 'delete')
+        return redirect(url_for('admin.dashboard'))
+    else:
+        user.is_active = False
+        db.session.commit()
+        flash('User Deleted Successfully...', 'delete')
+    return redirect(url_for('admin.dashboard'))

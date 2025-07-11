@@ -1,0 +1,95 @@
+{% extends 'base.html' %} {% block title %}Profile{% endblock %} {% block body
+%}
+
+<!-- Toast Notification -->
+<div class="toast-container position-fixed top-5 p-2" style="z-index: 1080">
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %} {% for category, message in messages %} {% if category ==
+  'profile' %}
+  <div
+    class="toast align-items-center text-white bg-secondary border-0"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+  >
+    <div class="d-flex">
+      <div class="toast-body">{{ message | safe }}</div>
+      <button
+        type="button"
+        class="btn-close btn-close-white me-2 m-auto"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+      ></button>
+    </div>
+  </div>
+  {% endif %} {% endfor %} {% endif %} {% endwith %}
+</div>
+
+<div class="container my-5">
+  <div
+    class="card mx-auto w-50 w-md-25 p-4 shadow-sm border border-2 border-secondary rounded-5"
+  >
+    <h2 class="text-center mb-1 text-dark fw-bold">
+      <i class="bi bi-person-fill mx-2"></i>User Profile
+    </h2>
+    <hr />
+    <div class="row">
+      <div class="col-md-6">
+        <p class="text-dark fw-semibold px-5">Name :</p>
+      </div>
+      <div class="col-md-6">
+        <p class="text-dark px-2">
+          {{ profile_data.fname }} {{ profile_data.lname }}
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <p class="text-dark fw-semibold px-5">Email :</p>
+      </div>
+      <div class="col-md-6">
+        <p class="text-dark px-2">{{ profile_data.email }}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <p class="text-dark fw-semibold px-5">Gender :</p>
+      </div>
+      <div class="col-md-6">
+        <p class="text-dark px-2">{{ profile_data.gender.value }}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <p class="text-dark fw-semibold px-5">Contact :</p>
+      </div>
+      <div class="col-md-6">
+        <p class="text-dark px-2">{{ profile_data.contact }}</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <p class="text-dark fw-semibold px-5">Address :</p>
+      </div>
+      <div class="col-md-6">
+        <p class="text-dark px-2">
+          {{ profile_data.address }} <br />
+          {{ profile_data.city }}, {{ profile_data.state }}
+        </p>
+      </div>
+    </div>
+    <hr />
+    <div class="text-center">
+      <a
+        href=" {{ url_for('profile.update') }} "
+        class="btn btn-dark text-light fw-bold rounded-4 mx-1"
+      >
+        <i class="bi bi-pencil-square me-2"></i>Update Profile
+      </a>
+      <!-- <a href="" class="btn btn-dark text-light fw-bold rounded-4 mx-1">
+        <i class="bi bi-trash3-fill me-2"></i>Delete Profile
+      </a> -->
+    </div>
+  </div>
+</div>
+{% endblock %}

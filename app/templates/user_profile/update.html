@@ -1,0 +1,199 @@
+{% extends 'base.html' %} {% block title %}Update Profile{% endblock %} {% block
+body %}
+
+<!-- Toast Notification -->
+<div class="toast-container position-fixed top-5 p-2" style="z-index: 1080">
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %} {% for category, message in messages %} {% if category ==
+  'profile' %}
+  <div
+    class="toast align-items-center text-white bg-secondary border-0"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+  >
+    <div class="d-flex">
+      <div class="toast-body">{{ message | safe }}</div>
+      <button
+        type="button"
+        class="btn-close btn-close-white me-2 m-auto"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+      ></button>
+    </div>
+  </div>
+  {% endif %} {% endfor %} {% endif %} {% endwith %}
+</div>
+
+<div class="container my-5">
+  <div
+    class="card mx-auto w-50 w-md-25 p-4 shadow-sm border border-2 border-secondary rounded-5"
+  >
+    <h2 class="text-center mb-4 text-dark fw-bold">
+      <i class="bi bi-person-plus me-2"></i>Update Your Profile Info
+    </h2>
+
+    <form
+      method="POST"
+      action="{{ url_for('profile.update') }}"
+      class="justify-content-center"
+    >
+      {{ form.hidden_tag() }}
+      <div class="mb-3">
+        <label for="fname" class="form-label text-dark fw-semibold"
+          >First Name</label
+        >
+        <input
+          type="text"
+          class="form-control bg-light text-dark border-secondary rounded-4"
+          id="fname"
+          name="fname"
+          value="{{ profile_data.fname }}"
+          disabled
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="lname" class="form-label text-dark fw-semibold"
+          >Last Name</label
+        >
+        <input
+          type="text"
+          class="form-control bg-light text-dark border-secondary rounded-4"
+          id="lname"
+          name="lname"
+          value="{{ profile_data.lname }}"
+          disabled
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="gender" class="form-label text-dark fw-semibold"
+          >Gender</label
+        >
+        <input
+          type="text"
+          class="form-control bg-light text-dark border-secondary rounded-4"
+          id="gender"
+          name="gender"
+          value="{{ profile_data.gender.value }}"
+          disabled
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label text-dark fw-semibold"
+          >Email</label
+        >
+        <input
+          type="email"
+          class="form-control bg-light text-dark border-secondary rounded-4"
+          id="email"
+          name="email"
+          value="{{ profile_data.email }}"
+          disabled
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label text-dark fw-semibold"
+          >Password</label
+        >
+        <input
+          type="password"
+          class="form-control bg-light text-dark border-secondary rounded-4"
+          id="password"
+          name="password"
+          placeholder="Enter your password"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="confirm_password" class="form-label text-dark fw-semibold"
+          >Confirm Password</label
+        >
+        <input
+          type="password"
+          class="form-control bg-light text-dark border-secondary rounded-4"
+          id="confirm_password"
+          name="confirm_password"
+          placeholder="Confirm your password"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="contact" class="form-label text-dark fw-semibold"
+          >Contact Number</label
+        >
+        <input
+          type="text"
+          class="form-control bg-light text-dark border-secondary rounded-4"
+          id="contact"
+          name="contact"
+          pattern="[6-9]{1}[0-9]{9}"
+          placeholder="Enter your contact number"
+          value="{{ profile_data.contact }}"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="address" class="form-label text-dark fw-semibold"
+          >Address</label
+        >
+        <textarea
+          class="form-control bg-light text-dark border-secondary rounded-4"
+          id="address"
+          name="address"
+          placeholder="Enter your address"
+          value="{{ profile_data.address }}"
+        ></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="city" class="form-label text-dark fw-semibold">City</label>
+        <input
+          type="text"
+          class="form-control bg-light text-dark border-secondary rounded-4"
+          id="city"
+          name="city"
+          placeholder="Enter your city"
+          value="{{ profile_data.city }}"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label for="state" class="form-label text-dark fw-semibold"
+          >State</label
+        >
+        <input
+          type="text"
+          class="form-control bg-light text-dark border-secondary rounded-4"
+          id="state"
+          name="state"
+          placeholder="Enter your state"
+          value="{{ profile_data.state }}"
+        />
+      </div>
+
+      <div class="d-grid mb-3">
+        <button type="submit" class="btn btn-dark text-light fw-bold rounded-4">
+          Submit
+        </button>
+      </div>
+      <div>
+        <a
+          href="{{ url_for('profile.show') }}"
+          class="d-grid mb-3 text-decoration-none"
+        >
+          <button
+            type="button"
+            class="btn btn-dark text-light fw-bold rounded-4"
+          >
+            Back
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

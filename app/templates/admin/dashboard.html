@@ -5,7 +5,7 @@ block body %}
 <div class="toast-container position-fixed top-5 p-2" style="z-index: 1080">
   {% with messages = get_flashed_messages(with_categories=true) %} {% if
   messages %} {% for category, message in messages %} {% if category ==
-  'register_pm1' %}
+  'register_pm1' or category == 'delete' %}
   <div
     class="toast align-items-center text-white bg-secondary border-0"
     role="alert"
@@ -25,15 +25,70 @@ block body %}
   {% endif %} {% endfor %} {% endif %} {% endwith %}
 </div>
 
-<div class="container my-2">
+<div class="container mt-3">
   <h4 class="text-dark text-center fw-bold">ADMIN PANEL</h4>
 </div>
 
+<!-- Cards for Product Manager, Customer, and Product Counts -->
+<div class="container my-5">
+  <div class="row g-4">
+    <!-- Users Card -->
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 rounded-4 bg-light h-100">
+        <div class="card-body d-flex align-items-center">
+          <div class="me-4 text-primary fs-1">
+            <i class="bi bi-people-fill"></i>
+          </div>
+          <div>
+            <h5 class="card-title fw-bold text-dark mb-1">
+              Total Product Manager
+            </h5>
+            <h4 class="text-dark">{{productManager_count}}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customers Card -->
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 rounded-4 bg-light h-100">
+        <div class="card-body d-flex align-items-center">
+          <div class="me-4 text-success fs-1">
+            <i class="bi bi-person-badge-fill"></i>
+          </div>
+          <div>
+            <h5 class="card-title fw-bold text-dark mb-1">Total Customers</h5>
+            <h4 class="text-dark">{{customer_count}}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Products Card -->
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 rounded-4 bg-light h-100">
+        <div class="card-body d-flex align-items-center">
+          <div class="me-4 text-danger fs-1">
+            <i class="bi bi-box-seam"></i>
+          </div>
+          <div>
+            <h5 class="card-title fw-bold text-dark mb-1">Total Products</h5>
+            <h4 class="text-dark">{{product_count}}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<hr />
+<div class="container mt-2">
+  <h2 class="mb-4 text-center">User Management</h2>
+</div>
 <!-- Registration Button   -->
-<div class="container my-2 d-flex justify-content-end">
+<div class="container my-3 d-flex justify-content-end">
   <a href="{{ url_for('admin.add_product_manager') }}">
     <button
-      class="btn btn-dark border border-2 border-light justify-content-end"
+      class="btn btn-dark border border-2 border-light rounded-4 justify-content-end"
       type="button"
     >
       Register Product Manager
@@ -41,5 +96,67 @@ block body %}
   </a>
 </div>
 
-<div class="container"></div>
+<!-- User Management Table -->
+<div class="container-fluid">
+  <table
+    id="userTable"
+    class="table table-striped table-bordered align-middle text-center"
+  >
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Full Name</th>
+        <th>Gender</th>
+        <th>Email</th>
+        <th>Contact</th>
+        <th>Address</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.fname }} {{ user.lname }}</td>
+        <td>{{ user.gender.name if user.gender else 'N/A' }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.contact or 'N/A' }}</td>
+        <td>{{ user.address or 'N/A' }}</td>
+        <td>{{ user.city or 'N/A' }}</td>
+        <td>{{ user.state or 'N/A' }}</td>
+        <td>
+          {% if user.role_id == 1 %} ADMIN {% elif user.role_id == 2 %} PRODUCT
+          MANAGER {% else %} CUSTOMER {% endif %}
+        </td>
+        <td>
+          {% if user.is_active %}
+          <span class="badge bg-success">ACTIVE</span>
+          {% else %}
+          <span class="badge bg-secondary">INACTIVE</span>
+          {% endif %}
+        </td>
+        <td>
+          <button type="button" class="btn btn-primary rounded-4 m-1">
+            <i class="bi bi-pencil-square"></i>
+          </button>
+          <a
+            href="{{ url_for('admin.delete', id=user.id) }}"
+            onclick="return confirm('Are you sure you want to delete this user ?');"
+          >
+            <button type="button" class="btn btn-danger rounded-4 m-1">
+              <i class="bi bi-trash3-fill"></i>
+            </button>
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<br />
+
 {% endblock %}

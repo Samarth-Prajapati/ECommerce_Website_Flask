@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Shopify | {% block title %}{% endblock %}</title>
 
+    <!-- Data Table  -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"
+    />
+
     <!-- Icon   -->
     <link
       rel="icon"
@@ -88,13 +94,23 @@
 
             {% endif %} {% if current_user.role_id == 2 %}
             <div class="text-white m-2">
-              <i class="bi bi-person-circle text-white ml-2"></i>
-              {{ current_user.fname }} ( PRODUCT MANAGER )
+              <a
+                href="{{ url_for('profile.show') }}"
+                class="text-decoration-none text-white"
+              >
+                <i class="bi bi-person-circle text-white ml-2"></i>
+                {{ current_user.fname }} ( PRODUCT MANAGER )
+              </a>
             </div>
             {% endif %} {% if current_user.role_id == 3 %}
             <div class="text-white m-2">
-              <i class="bi bi-person-circle text-white ml-2"></i> {{
-              current_user.fname }}
+              <a
+                href="{{ url_for('profile.show') }}"
+                class="text-decoration-none text-white"
+              >
+                <i class="bi bi-person-circle text-white ml-2"></i> {{
+                current_user.fname }}
+              </a>
             </div>
 
             {% endif %}
@@ -185,6 +201,10 @@
         </div>
       </div>
     </footer>
+
+    <!-- Data Table  -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
     <!-- Custom JS  -->
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>

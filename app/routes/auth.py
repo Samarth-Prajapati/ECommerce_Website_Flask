@@ -40,9 +40,9 @@ def register():
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
-        if User.query.filter_by(email=email).first():
-            flash('Email Already Registered...', 'register1')
-            return render_template('register.html', form=form, title='Register')
+        if User.query.filter_by(email=email).first() and User.query.filter_by(email=email).first().is_active:
+                flash('Email Already Registered...', 'register1')
+                return render_template('register.html', form=form, title='Register')
         user = User(
             fname=form.fname.data.upper(),
             lname=form.lname.data.upper(),
