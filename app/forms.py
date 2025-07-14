@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, TextAreaField
-from wtforms.validators import DataRequired, Email, Length, EqualTo, Regexp
+from wtforms import StringField, PasswordField, SubmitField, SelectField, TextAreaField, FloatField, IntegerField, BooleanField
+from wtforms.validators import DataRequired, Email, Length, EqualTo, Regexp, Optional, URL, NumberRange, ValidationError
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email(), Length(max=150)])
@@ -19,3 +19,13 @@ class RegisterForm(FlaskForm):
     city = StringField('City', validators=[DataRequired(), Length(max=100)])
     state = StringField('State', validators=[DataRequired(), Length(max=100)])
     submit = SubmitField('Register')
+
+class ProductForm(FlaskForm):
+    name = StringField('Product Name', validators=[DataRequired(), Length(min=2, max=150)])
+    description = TextAreaField('Description', validators=[DataRequired()])
+    price = FloatField('Price', validators=[DataRequired(), NumberRange(min=0.01)])
+    quantity = IntegerField('Quantity', validators=[DataRequired(), NumberRange(min=0)])
+    available = BooleanField('Available', default=True)
+    image_url = StringField('Product Image URL', validators=[Optional(), URL(message="Please enter a valid URL")])
+    category_id = SelectField('Category', coerce=int, choices=[(1, 'MEN'), (2, 'WOMEN'), (3, 'KIDS')], validators=[DataRequired()])
+    submit = SubmitField('Add Product')

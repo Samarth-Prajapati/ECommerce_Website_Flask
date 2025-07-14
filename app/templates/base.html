@@ -93,6 +93,11 @@
             </div>
 
             {% endif %} {% if current_user.role_id == 2 %}
+            <a
+              class="nav-link text-light"
+              href="{{ url_for('product.dashboard') }}"
+              >Add Product</a
+            >
             <div class="text-white m-2">
               <a
                 href="{{ url_for('profile.show') }}"

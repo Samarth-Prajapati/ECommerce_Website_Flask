@@ -1,0 +1,113 @@
+{% extends 'base.html' %} {% block title %}Add Product{% endblock %} {% block
+body %}
+
+<!-- Toast Notification -->
+<div class="toast-container position-fixed top-5 p-2" style="z-index: 1080">
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %} {% for category, message in messages %} {% if category ==
+  'product' %}
+  <div
+    class="toast align-items-center text-white bg-secondary border-0"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+  >
+    <div class="d-flex">
+      <div class="toast-body">{{ message | safe }}</div>
+      <button
+        type="button"
+        class="btn-close btn-close-white me-2 m-auto"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+      ></button>
+    </div>
+  </div>
+  {% endif %} {% endfor %} {% endif %} {% endwith %}
+</div>
+
+<div class="container my-5">
+  <div
+    class="card mx-auto w-50 w-md-25 p-4 shadow-sm border border-2 border-secondary rounded-5"
+  >
+    <h2 class="text-center mb-4 text-dark fw-bold">
+      <i class="bi bi-box-seam me-2"></i>Add Product
+    </h2>
+    <form
+      method="POST"
+      action="{{ url_for('product.add_product') }}"
+      class="justify-content-center"
+    >
+      {{ form.hidden_tag() }}
+
+      <div class="mb-3">
+        {{ form.name.label(class="form-label text-dark fw-semibold") }} {{
+        form.name(class="form-control bg-light text-dark border-secondary
+        rounded-4", placeholder="Enter product name") }} {% if form.name.errors
+        %} {% for error in form.name.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.description.label(class="form-label text-dark fw-semibold") }}
+        {{ form.description(class="form-control bg-light text-dark
+        border-secondary rounded-4", placeholder="Enter product description") }}
+        {% if form.description.errors %} {% for error in form.description.errors
+        %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.price.label(class="form-label text-dark fw-semibold") }} {{
+        form.price(class="form-control bg-light text-dark border-secondary
+        rounded-4", placeholder="Enter product price") }} {% if
+        form.price.errors %} {% for error in form.price.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.quantity.label(class="form-label text-dark fw-semibold") }} {{
+        form.quantity(class="form-control bg-light text-dark border-secondary
+        rounded-4", placeholder="Enter quantity") }} {% if form.quantity.errors
+        %} {% for error in form.quantity.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="mb-3 form-check">
+        {{ form.available(class="form-check-input") }} {{
+        form.available.label(class="form-check-label text-dark fw-semibold") }}
+        {% if form.available.errors %} {% for error in form.available.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.image_url.label(class="form-label text-dark fw-semibold") }} {{
+        form.image_url(class="form-control bg-light text-dark border-secondary
+        rounded-4", placeholder="Enter image URL (e.g.,
+        https://example.com/image.jpg)") }} {% if form.image_url.errors %} {%
+        for error in form.image_url.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.category_id.label(class="form-label text-dark fw-semibold") }}
+        {{ form.category_id(class="form-select bg-light text-dark
+        border-secondary rounded-4") }} {% if form.category_id.errors %} {% for
+        error in form.category_id.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="d-grid mb-3">
+        {{ form.submit(class="btn btn-dark text-light fw-bold rounded-4") }}
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

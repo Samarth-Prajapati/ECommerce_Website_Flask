@@ -39,7 +39,7 @@ class User(db.Model, UserMixin):
     fname = db.Column(db.String(100), nullable=False)
     lname = db.Column(db.String(100), nullable=False)
     gender = db.Column(db.Enum(Gender), nullable=True)
-    email = db.Column(db.String(150), unique=True, nullable=False)
+    email = db.Column(db.String(150), nullable=False)
     password = db.Column(db.String(255), nullable=True)
     contact = db.Column(db.String(20), nullable=True)
     address = db.Column(db.Text, nullable=True)

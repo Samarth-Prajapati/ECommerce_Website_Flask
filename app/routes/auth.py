@@ -18,7 +18,7 @@ def login():
         email = form.email.data
         password = form.password.data
         user = User.query.filter_by(email=email).first()
-        if user and check_password_hash(user.password, password):
+        if user and (user.oauth_provider or check_password_hash(user.password, password)):
             login_user(user, remember=False)
             flash('Login Successful...', 'login')
             if user.role_id == 1:
@@ -40,7 +40,7 @@ def register():
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
-        if User.query.filter_by(email=email).first() and User.query.filter_by(email=email).first().is_active:
+        if User.query.filter_by(email=email, is_active = True).first():
                 flash('Email Already Registered...', 'register1')
                 return render_template('register.html', form=form, title='Register')
         user = User(
@@ -107,6 +107,21 @@ def google_callback():
             user.fname = fname.upper()
             user.lname = lname.upper()
             db.session.commit()
+        elif User.query.filter_by(email=email, is_active=False).first():
+            user = User(
+                fname=fname.upper(),
+                lname=lname.upper(),
+                email=email,
+                oauth_provider='google',
+                oauth_id=oauth_id,
+                role_id=3,
+                is_active=True
+            )
+            db.session.add(user)
+            db.session.commit()
+            login_user(user)
+            flash('Please Complete Your Profile...', 'oauth')
+            return redirect(url_for('auth.complete_profile'))
         login_user(user)
         flash('Logged In With Google...', 'oauth')
         return redirect(url_for('main.home'))
@@ -155,6 +170,21 @@ def github_callback():
             user.fname = fname.upper()
             user.lname = lname.upper()
             db.session.commit()
+        elif User.query.filter_by(email=email, is_active=False).first():
+            user = User(
+                fname=fname.upper(),
+                lname=lname.upper(),
+                email=email,
+                oauth_provider='google',
+                oauth_id=oauth_id,
+                role_id=3,
+                is_active=True
+            )
+            db.session.add(user)
+            db.session.commit()
+            login_user(user)
+            flash('Please Complete Your Profile...', 'oauth')
+            return redirect(url_for('auth.complete_profile'))
         login_user(user)
         flash('Logged In With GitHub...', 'oauth')
         return redirect(url_for('main.home'))
@@ -174,6 +204,10 @@ def complete_profile():
         if db.session.query(User).filter_by(email=email).first() and email != current_user.email:
             flash('Email Already In Use...', 'oauth')
             return render_template('completeProfile.html', form=form, title='complete_profile')
+        if form.password.data:
+            if form.password.data != form.confirm_password.data:
+                flash('Passwords Do Not Match...', 'oauth')
+                return render_template('completeProfile.html', form=form, title='complete_profile')
         try:
             current_user.email = email
             current_user.fname = form.fname.data.upper()

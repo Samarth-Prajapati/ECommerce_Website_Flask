@@ -1,11 +1,11 @@
-{% extends 'base.html' %} {% block title %}Update Profile{% endblock %} {% block
+{% extends 'base.html' %} {% block title %}Edit Profile{% endblock %} {% block
 body %}
 
 <!-- Toast Notification -->
 <div class="toast-container position-fixed top-5 p-2" style="z-index: 1080">
   {% with messages = get_flashed_messages(with_categories=true) %} {% if
-  messages %} {% for category, message in messages %} {% if category ==
-  'profile' %}
+  messages %} {% for category, message in messages %} {% if category == 'edit'
+  %}
   <div
     class="toast align-items-center text-white bg-secondary border-0"
     role="alert"
@@ -30,12 +30,12 @@ body %}
     class="card mx-auto w-50 w-md-25 p-4 shadow-sm border border-2 border-secondary rounded-5"
   >
     <h2 class="text-center mb-4 text-dark fw-bold">
-      <i class="bi bi-person-plus me-2"></i>Update Your Profile Info
+      <i class="bi bi-person-plus me-2"></i>Update Profile Info
     </h2>
 
     <form
       method="POST"
-      action="{{ url_for('profile.update') }}"
+      action="{{ url_for('admin.edit', id=profile_data.id) }}"
       class="justify-content-center"
     >
       {{ form.hidden_tag() }}
@@ -184,7 +184,7 @@ body %}
       </div>
       <div>
         <a
-          href="{{ url_for('profile.show') }}"
+          href="{{ url_for('admin.dashboard') }}"
           class="d-grid mb-3 text-decoration-none"
         >
           <button
