@@ -1,8 +1,7 @@
 $(document).ready(function () {
 
   // Data Table 
-    $('#userTable').DataTable();
-
+    $('#userTable,#productTable').DataTable();
   });
 
       // Toast messages

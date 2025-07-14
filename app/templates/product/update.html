@@ -1,0 +1,126 @@
+{% extends 'base.html' %} {% block title %}Edit Product Details{% endblock %} {%
+block body %}
+
+<!-- Toast Notification -->
+<div class="toast-container position-fixed top-5 p-2" style="z-index: 1080">
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %} {% for category, message in messages %} {% if category == 'edit'
+  %}
+  <div
+    class="toast align-items-center text-white bg-secondary border-0"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+  >
+    <div class="d-flex">
+      <div class="toast-body">{{ message | safe }}</div>
+      <button
+        type="button"
+        class="btn-close btn-close-white me-2 m-auto"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+      ></button>
+    </div>
+  </div>
+  {% endif %} {% endfor %} {% endif %} {% endwith %}
+</div>
+
+<div class="container my-5">
+  <div
+    class="card mx-auto w-50 w-md-25 p-4 shadow-sm border border-2 border-secondary rounded-5"
+  >
+    <h2 class="text-center mb-4 text-dark fw-bold">
+      <i class="bi bi-person-plus me-2"></i>Update Product Info
+    </h2>
+
+    <form
+      method="POST"
+      action="{{ url_for('product.update', id=product.id) }}"
+      class="justify-content-center"
+    >
+      {{ form.hidden_tag() }}
+      <div class="mb-3">
+        <label for="fname" class="form-label text-dark fw-semibold">Name</label>
+        <input
+          type="text"
+          class="form-control bg-light text-dark border-secondary rounded-4"
+          id="fname"
+          name="name"
+          value="{{ product.name }}"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="lname" class="form-label text-dark fw-semibold"
+          >Description</label
+        >
+        <input
+          type="text"
+          class="form-control bg-light text-dark border-secondary rounded-4"
+          id="lname"
+          name="description"
+          value="{{ product.description }}"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="gender" class="form-label text-dark fw-semibold"
+          >Price</label
+        >
+        <input
+          type="text"
+          class="form-control bg-light text-dark border-secondary rounded-4"
+          id="gender"
+          name="price"
+          value="{{ product.price }}"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label text-dark fw-semibold"
+          >Quantity</label
+        >
+        <input
+          type="text"
+          class="form-control bg-light text-dark border-secondary rounded-4"
+          id="email"
+          name="quantity"
+          value="{{ product.quantity }}"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label text-dark fw-semibold"
+          >Image Url</label
+        >
+        <input
+          type="text"
+          class="form-control bg-light text-dark border-secondary rounded-4"
+          id="password"
+          name="image"
+          value="{{ product.image }}"
+        />
+      </div>
+
+      <div class="d-grid mb-3">
+        <button type="submit" class="btn btn-dark text-light fw-bold rounded-4">
+          Submit
+        </button>
+      </div>
+      <div>
+        <a
+          href="{{ url_for('product.dashboard') }}"
+          class="d-grid mb-3 text-decoration-none"
+        >
+          <button
+            type="button"
+            class="btn btn-dark text-light fw-bold rounded-4"
+          >
+            Back
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

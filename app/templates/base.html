@@ -62,8 +62,6 @@
               href="{{ url_for('main.home') }}"
               >Home</a
             >
-            <a class="nav-link text-light" href="#">Link</a>
-            <a class="nav-link text-light" href="#">Link</a>
             {% if not current_user.is_authenticated %}
             <a href="{{ url_for('auth.login') }}"
               ><button

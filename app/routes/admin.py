@@ -15,8 +15,9 @@ def dashboard():
     users = User.query.filter_by(is_active=True).filter(User.role_id != 1).all()
     productManager_count = User.query.filter_by(role_id=2, is_active=True).count()
     customer_count = User.query.filter_by(role_id=3, is_active=True).count()
-    product_count = Product.query.count()
-    return render_template('admin/dashboard.html',users = users, productManager_count = productManager_count, customer_count = customer_count, product_count = product_count, title='admin')
+    product_count = Product.query.filter_by(is_active=True).count()
+    products = Product.query.filter_by(is_active=True).join(User, Product.created_by == User.id).all()
+    return render_template('admin/dashboard.html',users = users, productManager_count = productManager_count, customer_count = customer_count, product_count = product_count,products = products, title='admin')
 
 # Add Product Manager  
 @admin_bp.route('/dashboard/add_product_manager', methods=['GET', 'POST'])

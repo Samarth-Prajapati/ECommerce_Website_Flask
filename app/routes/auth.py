@@ -175,7 +175,7 @@ def github_callback():
                 fname=fname.upper(),
                 lname=lname.upper(),
                 email=email,
-                oauth_provider='google',
+                oauth_provider='github',
                 oauth_id=oauth_id,
                 role_id=3,
                 is_active=True
