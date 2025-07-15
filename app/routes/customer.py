@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from ..models import Product, User, Category, CartItem
+from ..models import Product, User, Category, CartItem, Review
 from flask_login import login_required, current_user
 from .. import db
-from ..forms import AddToCartForm
+from ..forms import AddToCartForm, ReviewForm
 
 customer_bp = Blueprint('customer', __name__, url_prefix = '/customer')
 
@@ -31,7 +31,10 @@ def product_details(product_id):
         .first_or_404()
     cart_item = CartItem.query.filter_by(user_id=current_user.id, product_id=product_id, product_status=True).first() if current_user.is_authenticated else None
     form = AddToCartForm()
-    return render_template('product/product_details.html', product=product, cart_item=cart_item, form=form, title=product.name)
+    review_form = ReviewForm()
+    reviews = Review.query.filter_by(product_id=product_id, is_active=True).join(User, Review.user_id == User.id).all()
+    user_review = Review.query.filter_by(user_id=current_user.id, product_id=product_id, is_active=True).first() if current_user.is_authenticated else None
+    return render_template('product/product_details.html', product=product, cart_item=cart_item, form=form, review_form=review_form, reviews=reviews, user_review=user_review, title=product.name)
 
 @customer_bp.route('/cart/add/<int:product_id>', methods=['POST'])
 @login_required
@@ -94,3 +97,32 @@ def remove_from_cart(product_id):
     db.session.commit()
     flash('Product Removed from Cart.', 'cart')
     return redirect(url_for('customer.view_cart', product_id=product_id))
+
+@customer_bp.route('/product/<int:product_id>/review', methods=['POST'])
+@login_required
+def submit_review(product_id):
+    if not current_user.is_authenticated or current_user.role_id != 3:
+        flash('Please login as a Customer to submit a review...', 'review')
+        return redirect(url_for('customer.product_details', product_id=product_id))
+    form = ReviewForm()
+    if form.validate_on_submit():
+        product = Product.query.get_or_404(product_id)
+        existing_review = Review.query.filter_by(user_id=current_user.id, product_id=product_id, is_active=True).first()
+        if existing_review:
+            flash('You have already reviewed this product...', 'review')
+            return redirect(url_for('customer.product_details', product_id=product_id))
+        review = Review(
+            user_id=current_user.id,
+            product_id=product_id,
+            rating=form.rating.data,
+            comments=form.comment.data,
+            is_active=True
+        )
+        db.session.add(review)
+        db.session.commit()
+        flash('Review Submitted Successfully...', 'review')
+        return redirect(url_for('customer.product_details', product_id=product_id))
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(f'Error in {field}: {error}', 'review')
+    return redirect(url_for('customer.product_details', product_id=product_id))

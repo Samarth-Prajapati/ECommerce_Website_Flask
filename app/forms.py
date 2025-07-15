@@ -32,3 +32,8 @@ class ProductForm(FlaskForm):
 
 class AddToCartForm(FlaskForm):
     submit = SubmitField('Add to Cart')
+
+class ReviewForm(FlaskForm):
+    rating = SelectField('Rating', choices=[(i, str(i)) for i in range(1, 6)], coerce=int, validators=[DataRequired()])
+    comment = TextAreaField('Comment', validators=[Optional(), Length(max=1000)])
+    submit = SubmitField('Submit Review')

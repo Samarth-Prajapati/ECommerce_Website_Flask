@@ -5,7 +5,7 @@ block body %}
 <div class="toast-container position-fixed top-5 p-2" style="z-index: 1080">
   {% with messages = get_flashed_messages(with_categories=true) %} {% if
   messages %} {% for category, message in messages %} {% if category ==
-  'register_pm1' or category == 'delete' or category == 'cart' %}
+  'register_pm1' or category == 'delete' or category == 'cart' or category == 'review' %}
   <div
     class="toast align-items-center text-white bg-secondary border-0"
     role="alert"
@@ -55,6 +55,13 @@ block body %}
         <strong>Created by:</strong> {{ product.creator.fname }} {{
         product.creator.lname }}
       </p>
+      {% if current_user.is_authenticated and current_user.role_id == 3 and not user_review %}
+      {% if product.available and product.quantity>0 %}
+        <button type="button" class="btn btn-outline-dark btn-lg w-100 rounded-4 mb-3" data-bs-toggle="modal" data-bs-target="#reviewModal">
+          Write a Review
+        </button>
+      {% endif %}
+      {% endif %}
       <form
         action="{{ url_for('customer.add_to_cart', product_id=product.id) }}"
         method="POST"
@@ -80,5 +87,31 @@ block body %}
       </a>
     </div>
   </div>
+
+  <!-- Review Section -->
+  <div class="row mt-5">
+    <div class="col-12">
+      <h3>Customer Reviews</h3>
+      {% if reviews %}
+        {% for review in reviews %}
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">{{ review.user.fname }} {{ review.user.lname }}</h5>
+              <p class="card-text">
+                <strong>Rating:</strong> {{ '★' * review.rating }}{{ '☆' * (5 - review.rating) }}
+              </p>
+              {% if review.comment %}
+                <p class="card-text">{{ review.comment }}</p>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>No reviews yet. Be the first to review this product!</p>
+      {% endif %}
+    </div>
+  </div>
+  <!-- Include Review Modal -->
+  {% include 'product/review.html' %}
 </div>
 {% endblock %}

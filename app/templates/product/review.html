@@ -1,0 +1,36 @@
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reviewModalLabel">Review {{ product.name }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{{ url_for('customer.submit_review', product_id=product.id) }}">
+          {{ review_form.hidden_tag() }}
+          <div class="mb-3">
+            {{ review_form.rating.label(class="form-label text-dark fw-semibold") }}
+            {{ review_form.rating(class="form-select bg-light text-dark border-secondary rounded-4") }}
+            {% if review_form.rating.errors %}
+              {% for error in review_form.rating.errors %}
+                <small class="text-danger">{{ error }}</small>
+              {% endfor %}
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            {{ review_form.comment.label(class="form-label text-dark fw-semibold") }}
+            {{ review_form.comment(class="form-control bg-light text-dark border-secondary rounded-4", placeholder="Enter your review comments") }}
+            {% if review_form.comment.errors %}
+              {% for error in review_form.comment.errors %}
+                <small class="text-danger">{{ error }}</small>
+              {% endfor %}
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            {{ review_form.submit(class="btn btn-dark text-light fw-bold rounded-4 w-100") }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
