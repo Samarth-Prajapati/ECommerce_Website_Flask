@@ -17,7 +17,7 @@ def login():
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=email, is_active = True).first()
         if user and (user.oauth_provider or check_password_hash(user.password, password)):
             login_user(user, remember=False)
             flash('Login Successful...', 'login')
@@ -107,6 +107,10 @@ def google_callback():
             user.fname = fname.upper()
             user.lname = lname.upper()
             db.session.commit()
+        elif User.query.filter_by(email=email, is_active=True).first():
+            login_user(user)
+            flash('Logged In With Google...', 'oauth')
+            return redirect(url_for('main.home'))
         elif User.query.filter_by(email=email, is_active=False).first():
             user = User(
                 fname=fname.upper(),
@@ -170,6 +174,10 @@ def github_callback():
             user.fname = fname.upper()
             user.lname = lname.upper()
             db.session.commit()
+        elif User.query.filter_by(email=email, is_active=True).first():
+            login_user(user)
+            flash('Logged In With Github...', 'oauth')
+            return redirect(url_for('main.home'))
         elif User.query.filter_by(email=email, is_active=False).first():
             user = User(
                 fname=fname.upper(),

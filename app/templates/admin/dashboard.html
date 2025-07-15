@@ -113,7 +113,6 @@ block body %}
         <th>City</th>
         <th>State</th>
         <th>Role</th>
-        <th>Status</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -131,13 +130,6 @@ block body %}
         <td>
           {% if user.role_id == 1 %} ADMIN {% elif user.role_id == 2 %} PRODUCT
           MANAGER {% else %} CUSTOMER {% endif %}
-        </td>
-        <td>
-          {% if user.is_active %}
-          <span class="badge bg-success">ACTIVE</span>
-          {% else %}
-          <span class="badge bg-secondary">INACTIVE</span>
-          {% endif %}
         </td>
         <td>
           <a href="{{ url_for('admin.edit', id=user.id) }}">
@@ -204,10 +196,10 @@ block body %}
         </td>
         <td>{{ product.creator.fname }} {{ product.creator.lname }}</td>
         <td>
-          {% if product.is_active %}
+          {% if product.available and product.quantity > 0 %}
           <span class="badge bg-success">ACTIVE</span>
           {% else %}
-          <span class="badge bg-secondary">INACTIVE</span>
+          <span class="badge bg-danger">INACTIVE</span>
           {% endif %}
         </td>
       </tr>

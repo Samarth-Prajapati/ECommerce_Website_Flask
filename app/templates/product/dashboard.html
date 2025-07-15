@@ -120,10 +120,10 @@ block body %}
           >
         </td>
         <td>
-          {% if product.is_active %}
+          {% if product.available and product.quantity > 0 %}
           <span class="badge bg-success">ACTIVE</span>
           {% else %}
-          <span class="badge bg-secondary">INACTIVE</span>
+          <span class="badge bg-danger">INACTIVE</span>
           {% endif %}
         </td>
         <td>

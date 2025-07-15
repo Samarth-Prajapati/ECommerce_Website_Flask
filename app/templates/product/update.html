@@ -90,6 +90,27 @@ block body %}
       </div>
 
       <div class="mb-3">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="available"
+          name="available"
+          {%
+          if
+          product.available
+          or
+          product.quantity
+          !="0"
+          %}checked{%
+          endif
+          %}
+        />
+        <label class="form-check-label text-dark fw-semibold" for="available"
+          >Available</label
+        >
+      </div>
+
+      <div class="mb-3">
         <label for="password" class="form-label text-dark fw-semibold"
           >Image Url</label
         >

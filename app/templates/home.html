@@ -118,7 +118,10 @@
       <br />
       <div class="row justify-content-center">
         <div class="col-auto mb-4">
-          <a href="{{ url_for('customer.men') }}" class="text-decoration-none">
+          <a
+            href="{{ url_for('customer.clothes', category_name='MEN') }}"
+            class="text-decoration-none"
+          >
             <div
               class="card border border-4 border-light rounded-5"
               style="width: 18rem"
@@ -136,7 +139,10 @@
           </a>
         </div>
         <div class="col-auto mb-4">
-          <a href="" class="text-decoration-none">
+          <a
+            href="{{ url_for('customer.clothes', category_name='WOMEN') }}"
+            class="text-decoration-none"
+          >
             <div
               class="card border border-4 border-light rounded-5"
               style="width: 18rem"
@@ -154,7 +160,10 @@
           </a>
         </div>
         <div class="col-auto mb-4">
-          <a href="" class="text-decoration-none">
+          <a
+            href="{{ url_for('customer.clothes', category_name='KIDS') }}"
+            class="text-decoration-none"
+          >
             <div
               class="card border border-4 border-light rounded-5"
               style="width: 18rem"
@@ -200,7 +209,7 @@
               alias perferendis aperiam quasi ad quae qui. Laudantium optio
               illum rem unde?
             </p>
-            <a href="" class="btn btn-dark border border-2 border-light"
+            <a href="{{ url_for('customer.clothes', category_name='ALL') }}" class="btn btn-dark border border-2 border-light"
               >Shop Now</a
             >
           </div>

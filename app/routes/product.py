@@ -56,6 +56,7 @@ def update(id):
         product.price = request.form.get('price')
         product.quantity = request.form.get('quantity')
         product.image = request.form.get('image')
+        product.available = 'available' in request.form
         db.session.commit() 
         flash('Updated Successfully...', 'product')
         return redirect(url_for('product.dashboard'))

@@ -29,3 +29,6 @@ class ProductForm(FlaskForm):
     image_url = StringField('Product Image URL', validators=[Optional(), URL(message="Please enter a valid URL")])
     category_id = SelectField('Category', coerce=int, choices=[(1, 'MEN'), (2, 'WOMEN'), (3, 'KIDS')], validators=[DataRequired()])
     submit = SubmitField('Add Product')
+
+class AddToCartForm(FlaskForm):
+    submit = SubmitField('Add to Cart')

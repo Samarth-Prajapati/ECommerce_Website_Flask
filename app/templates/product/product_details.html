@@ -1,0 +1,84 @@
+{% extends 'base.html' %} {% block title %}{{ product.name }}{% endblock %} {%
+block body %}
+
+<!-- Toast Notification -->
+<div class="toast-container position-fixed top-5 p-2" style="z-index: 1080">
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %} {% for category, message in messages %} {% if category ==
+  'register_pm1' or category == 'delete' or category == 'cart' %}
+  <div
+    class="toast align-items-center text-white bg-secondary border-0"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+  >
+    <div class="d-flex">
+      <div class="toast-body">{{ message | safe }}</div>
+      <button
+        type="button"
+        class="btn-close btn-close-white me-2 m-auto"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+      ></button>
+    </div>
+  </div>
+  {% endif %} {% endfor %} {% endif %} {% endwith %}
+</div>
+
+<div class="container my-5">
+  <div class="row">
+    <!-- Product Image -->
+    <div class="col-md-6">
+      <img
+        src="{{ product.image }}"
+        class="img-fluid rounded-3"
+        alt="{{ product.name }}"
+        style="max-height: 500px; object-fit: contain"
+      />
+    </div>
+    <!-- Product Details -->
+    <div class="col-md-6">
+      <h2 class="mb-3">{{ product.name }}</h2>
+      <p class="text-muted">{{ product.description }}</p>
+      <h4 class="text-dark mb-3">Price: ${{ product.price }}</h4>
+      <p class="mb-2">
+        <strong>Availability:</strong>
+        {% if product.available and product.quantity > 0 %}
+        <span class="text-success"
+          >In Stock ({{ product.quantity }} available)</span
+        >
+        {% else %}
+        <span class="text-danger">Out of Stock</span>
+        {% endif %}
+      </p>
+      <p class="mb-4">
+        <strong>Created by:</strong> {{ product.creator.fname }} {{
+        product.creator.lname }}
+      </p>
+      <form
+        action="{{ url_for('customer.add_to_cart', product_id=product.id) }}"
+        method="POST"
+      >
+        {{ form.hidden_tag() }} {% if cart_item %}
+        <button
+          type="button"
+          class="btn btn-outline-dark btn-lg w-100 rounded-4"
+          disabled
+        >
+          Already in Cart
+        </button>
+        {% else %} {{ form.submit(class="btn btn-outline-dark btn-lg w-100
+        rounded-4") }} {% endif %}
+      </form>
+      <a
+        href="{{ url_for('customer.clothes', category_name=product.category.name.lower()) }}"
+        class="d-grid mb-3 text-decoration-none mt-2"
+      >
+        <button type="button" class="btn btn-dark text-light rounded-4">
+          Back
+        </button>
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

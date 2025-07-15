@@ -1,0 +1,79 @@
+{% extends 'base.html' %} {% block title %}MEN Category Products{% endblock %}
+{% block body %}
+
+<!-- Toast Notification -->
+<div class="toast-container position-fixed top-5 p-2" style="z-index: 1080">
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %} {% for category, message in messages %} {% if category ==
+  'register_pm1' or category == 'delete' or category == 'cart' %}
+  <div
+    class="toast align-items-center text-white bg-secondary border-0"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+  >
+    <div class="d-flex">
+      <div class="toast-body">{{ message | safe }}</div>
+      <button
+        type="button"
+        class="btn-close btn-close-white me-2 m-auto"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+      ></button>
+    </div>
+  </div>
+  {% endif %} {% endfor %} {% endif %} {% endwith %}
+</div>
+
+<div class="container mt-2 d-flex justify-content-between">
+  <a
+    href="{{ url_for('main.home') }}"
+    class="btn btn-dark btn-sm rounded-4 d-flex justify-content-between align-items-center h-25"
+    ><i class="bi bi-arrow-left"></i
+  ></a>
+  <div class="w-100">
+    <h2 class="mb-4 text-center">{{ category_name }} SECTION</h2>
+  </div>
+</div>
+
+<!-- Product Cards -->
+<div class="container my-3">
+  {% if products %}
+  <div class="row row-cols-3 g-3">
+    {% for product in products %}
+    <div class="col">
+      <div
+        class="card h-100 shadow-sm border border-1 border-dark rounded-4"
+        style="width: 100%; max-width: 500px"
+      >
+        <img
+          src="{{ product.image }}"
+          class="card-img-top rounded-top-4"
+          alt="{{ product.name }}"
+          style="height: 290px; object-fit: contain"
+        />
+        <div class="card-body p-2">
+          <h6 class="card-title text-dark fw-bold mb-2">
+            {{ product.name | truncate(20, True) }}
+          </h6>
+          <p class="card-text mb-2">
+            <strong>Price:</strong> ${{ product.price }}
+          </p>
+          <a
+            href="{{ url_for('customer.product_details', product_id=product.id) }}"
+            class="btn btn-dark btn-sm w-100 rounded-4"
+            >Details</a
+          >
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    <br />
+  </div>
+  {% else %}
+  <div class="alert alert-info text-center">
+    No active products found in the MEN category.
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

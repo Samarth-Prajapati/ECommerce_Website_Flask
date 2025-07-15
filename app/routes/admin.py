@@ -23,7 +23,7 @@ def dashboard():
 @admin_bp.route('/dashboard/add_product_manager', methods=['GET', 'POST'])
 @login_required
 def add_product_manager():
-    form = RegisterForm()
+    form = RegisterForm(request.form)
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
