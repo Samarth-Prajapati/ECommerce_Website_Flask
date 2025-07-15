@@ -11,8 +11,8 @@
     {% for product in products %}
     <div class="col">
       <div
-        class="card h-100 shadow-sm border border-4 border-secondary rounded-4"
-        style="width: 100%; max-width: 250px"
+        class="card h-100 shadow-sm border border-4 border-dark rounded-3"
+        style="width: 100%; max-width: 500px"
       >
         <img
           src="{{ product.image }}"
@@ -32,7 +32,7 @@
       </div>
     </div>
     {% endfor %}
-    <br>
+    <br />
   </div>
   {% else %}
   <div class="alert alert-info text-center">

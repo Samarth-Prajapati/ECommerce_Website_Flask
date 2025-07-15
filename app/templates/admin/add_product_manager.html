@@ -133,6 +133,14 @@
       <div class="d-grid mb-3">
         {{ form.submit(class="btn btn-dark text-light fw-bold rounded-4") }}
       </div>
+      <a
+        href="{{ url_for('admin.dashboard') }}"
+        class="d-grid mb-3 text-decoration-none"
+      >
+        <button type="button" class="btn btn-dark text-light fw-bold rounded-4">
+          Back
+        </button>
+      </a>
     </form>
   </div>
 </div>

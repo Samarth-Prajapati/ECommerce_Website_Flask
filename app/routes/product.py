@@ -14,7 +14,7 @@ def dashboard():
     if not current_user.is_authenticated or current_user.role_id != 2:
         return redirect(url_for('main.home'))
     product_count = Product.query.filter_by(created_by=current_user.id, is_active=True).count()
-    products = Product.query.filter_by(is_active=True).all()
+    products = Product.query.filter_by(created_by=current_user.id,is_active=True).all()
     return render_template('product/dashboard.html', product_count = product_count,products = products,title='product')
 
 # Add Product Manager  

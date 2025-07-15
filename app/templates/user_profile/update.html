@@ -142,13 +142,14 @@ body %}
         <label for="address" class="form-label text-dark fw-semibold"
           >Address</label
         >
-        <textarea
+        <input
+          type="text"
           class="form-control bg-light text-dark border-secondary rounded-4"
           id="address"
           name="address"
           placeholder="Enter your address"
           value="{{ profile_data.address }}"
-        ></textarea>
+        />
       </div>
 
       <div class="mb-3">
