@@ -1,0 +1,66 @@
+{% extends 'base.html' %} {% block title %}Create Discount{% endblock %} {%
+block body %}
+
+<div class="container my-5">
+  <div
+    class="card mx-auto w-50 w-md-25 p-4 shadow-sm border border-2 border-secondary rounded-5"
+  >
+    <h2 class="text-center mb-4 text-dark fw-bold">
+      <i class="bi bi-cash-coin me-2"></i>Create Discount
+    </h2>
+
+    <form method="POST" action="{{ url_for('product.discount') }}">
+      {{ form.hidden_tag() }}
+
+      <div class="mb-3">
+        {{ form.name.label(class="form-label text-dark fw-semibold") }} {{
+        form.name(class="form-control bg-light text-dark border-secondary
+        rounded-4", placeholder="Enter discount name") }} {% for error in
+        form.name.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.description.label(class="form-label text-dark fw-semibold") }}
+        {{ form.description(class="form-control bg-light text-dark
+        border-secondary rounded-4", placeholder="Enter description", rows=3) }}
+        {% for error in form.description.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.discount_type.label(class="form-label text-dark fw-semibold") }}
+        {{ form.discount_type(class="form-select bg-light text-dark
+        border-secondary rounded-4") }} {% for error in
+        form.discount_type.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-4">
+        {{ form.value.label(class="form-label text-dark fw-semibold") }} {{
+        form.value(class="form-control bg-light text-dark border-secondary
+        rounded-4", placeholder="Enter discount value (e.g., 50 or 10%)") }} {%
+        for error in form.value.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="d-grid mb-3">
+        {{ form.submit(class="btn btn-dark text-light fw-bold rounded-4") }}
+      </div>
+      <a
+        href="{{ url_for('product.dashboard') }}"
+        class="d-grid mb-3 text-decoration-none"
+      >
+        <button type="button" class="btn btn-dark text-light fw-bold rounded-4">
+          Back
+        </button>
+      </a>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

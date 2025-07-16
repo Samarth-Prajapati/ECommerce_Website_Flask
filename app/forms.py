@@ -37,3 +37,14 @@ class ReviewForm(FlaskForm):
     rating = SelectField('Rating', choices=[(i, str(i)) for i in range(1, 6)], coerce=int, validators=[DataRequired()])
     comment = TextAreaField('Comment', validators=[Optional(), Length(max=1000)])
     submit = SubmitField('Submit Review')
+
+class DiscountForm(FlaskForm):
+    name = StringField('Discount Name', validators=[DataRequired()])
+    description = TextAreaField('Description', validators=[DataRequired()])
+    discount_type = SelectField(
+        'Discount Type',
+        choices=[('FLAT', 'FLAT'), ('PERCENT', 'PERCENT')],  
+        validators=[DataRequired()]
+    )
+    value = FloatField('Discount Value', validators=[DataRequired(), NumberRange(min=0)])
+    submit = SubmitField('Create Discount')

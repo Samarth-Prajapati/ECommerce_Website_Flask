@@ -7,6 +7,7 @@ from .forms import LoginForm, RegisterForm
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_wtf.csrf import CSRFProtect
 from authlib.integrations.flask_client import OAuth
+import stripe
 
 app = Flask(__name__)
 
@@ -51,6 +52,10 @@ oauth.register(
     authorize_url='https://github.com/login/oauth/authorize',
     client_kwargs={'scope': 'user:email'}
 )
+
+# Stripe Payment Configuration
+stripe.api_key = app.config['STRIPE_SECRET_KEY']
+stripe_publishable_key = app.config['STRIPE_PUBLISHABLE_KEY']
 
 # Importing models for Initialization of Tables
 from .models import Role, User, Category, Product, CartItem, Discount, Order, OrderItem, Invoice, Review, Report 

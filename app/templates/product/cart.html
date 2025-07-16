@@ -25,7 +25,7 @@
 </div>
 
 <div class="container-fluid mt-5">
-  <h2 class="text-center mb-4">Your Cart</h2>
+  <h2 class="text-center mb-4">Your Cart</h2><hr>
   {% if cart_items %}
   <table class="table table-striped">
     <thead>
@@ -84,11 +84,75 @@
       {% endfor %}
     </tbody>
   </table>
-  <h4 class="text-end">Total : $ {{ total_price }}</h4>
+  <h5 class="text-end">Total : $ {{ total_price }}</h5>
+  {% if discounts %}
+<div class="mb-4">
+  <h5 class="fw-bold text-dark">Available Discounts</h5>
+  <form method="GET" action="{{ url_for('customer.view_cart') }}">
+    <div class="row">
+      <div class="col-md-6">
+        <select name="selected_discount" class="form-select rounded-4 border-secondary">
+          <option value="">Select Discount</option>
+          {% for d in discounts %}
+            <option value="{{ d.id }}" {% if d.id == selected_discount_id %}selected{% endif %}>
+              {{ d.name }} ({{ d.discount_type.value }} - 
+              {% if d.discount_type.value == 'FLAT' %}
+                ${{ d.value }}
+              {% else %}
+                {{ d.value }} %
+              {% endif %})
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-dark rounded-4">Apply</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% if discounted_price != total_price %}
+  <div class="alert alert-success rounded-4">
+    <strong>Discount Applied!</strong><br/>
+  Original Total :     <strong style="text-decoration: line-through; text-decoration-color: red;">$ {{ total_price }}</strong><br>
+  Discounted Total :   <strong>$ {{ discounted_price }}</strong>
+  </div>
+{% endif %}
+{% endif %}
+<div class="row justify-content-center">
+  <div class="col">
+    <div class="card border-dark shadow-sm rounded-4">
+      <div class="card-header bg-dark text-white fw-bold">Price Breakdown</div>
+      <div class="card-body">
+        <p><strong>Original Total :</strong> $ {{ '%.2f'|format(total_price) }}</p>
+
+        {% if discount_amount > 0 %}
+        <p class="text-success"><strong>Discount ({{ discount_name }}) :</strong> - $ {{ '%.2f'|format(discount_amount) }}</p>
+        {% endif %}
+
+        <p class="text-warning"><strong>GST (12%) :</strong> $ {{ '%.2f'|format(gst_amount) }}</p>
+
+        <hr />
+        <h5 class="fw-bold">Final Total : $ {{ '%.2f'|format(final_total) }}</h5>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="text-end mt-2">
+    <form method="POST" action="{{ url_for('customer.checkout') }}">
+      {{ form.hidden_tag() }}
+      <input type="hidden" name="selected_discount" value="{{ selected_discount_id }}">
+      <button type="submit" class="btn btn-outline-dark rounded-4">
+        Proceed to Checkout
+      </button>
+    </form>
+  </div>
+
   <div class="text-end">
     <a
       href="{{ url_for('customer.clothes', category_name='ALL') }}"
-      class="btn btn-dark rounded-4"
+      class="btn btn-dark rounded-4 mt-2"
       >Continue Shopping</a
     >
   </div>
@@ -104,4 +168,5 @@
   {% endif %}
 </div>
 <br />
+<script src="https://js.stripe.com/v3/"></script>
 {% endblock %}
