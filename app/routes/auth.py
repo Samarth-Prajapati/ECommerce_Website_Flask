@@ -101,13 +101,13 @@ def google_callback():
             login_user(user)
             flash('Please Complete Your Profile...', 'oauth')
             return redirect(url_for('auth.complete_profile'))
-        elif user.oauth_provider != 'google' or user.oauth_id != oauth_id:
-            user.oauth_provider = 'google'
-            user.oauth_id = oauth_id
-            user.fname = fname.upper()
-            user.lname = lname.upper()
-            db.session.commit()
-        elif User.query.filter_by(email=email, is_active=True).first():
+        elif user.is_active and user.oauth_provider and user.oauth_provider != 'google':
+            flash('This email is already linked to another OAuth provider. Please log in with that provider or contact support to link accounts.', 'oauth')
+            return redirect(url_for('auth.login'))
+        elif user.is_active and user.oauth_provider == 'google' and user.oauth_id != oauth_id:
+            flash('This email is already linked to a different Google account. Please log in with the correct account or contact support.', 'oauth')
+            return redirect(url_for('auth.login'))
+        elif user.is_active:
             login_user(user)
             flash('Logged In With Google...', 'oauth')
             return redirect(url_for('main.home'))
@@ -168,15 +168,15 @@ def github_callback():
             login_user(user)
             flash('Please Complete Your Profile...', 'oauth')
             return redirect(url_for('auth.complete_profile'))
-        elif user.oauth_provider != 'github' or user.oauth_id != oauth_id:
-            user.oauth_provider = 'github'
-            user.oauth_id = oauth_id
-            user.fname = fname.upper()
-            user.lname = lname.upper()
-            db.session.commit()
-        elif User.query.filter_by(email=email, is_active=True).first():
+        elif user.is_active and user.oauth_provider and user.oauth_provider != 'github':
+            flash('This email is already linked to another OAuth provider. Please log in with that provider or contact support to link accounts.', 'oauth')
+            return redirect(url_for('auth.login'))
+        elif user.is_active and user.oauth_provider == 'github' and user.oauth_id != oauth_id:
+            flash('This email is already linked to a different GitHub account. Please log in with the correct account or contact support.', 'oauth')
+            return redirect(url_for('auth.login'))
+        elif user.is_active:
             login_user(user)
-            flash('Logged In With Github...', 'oauth')
+            flash('Logged In With GitHub...', 'oauth')
             return redirect(url_for('main.home'))
         elif User.query.filter_by(email=email, is_active=False).first():
             user = User(

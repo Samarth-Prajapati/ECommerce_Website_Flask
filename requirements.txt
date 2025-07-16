@@ -8,3 +8,7 @@ authlib
 requests
 email-validator
 stripe
+reportlab
+flask-migrate
+Flask-Mail
+

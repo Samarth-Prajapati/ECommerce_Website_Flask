@@ -1,9 +1,11 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
-from ..models import Product, User, Category, CartItem, Review, Discount
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, abort
+from ..models import Product, User, Category, CartItem, Review, Discount, Invoice
 from flask_login import login_required, current_user
 from .. import db, stripe_publishable_key
 from ..forms import AddToCartForm, ReviewForm
 import stripe
+from app.utils.pdf_generator import generate_invoice_pdf
+from app.utils.email_utils import send_invoice_email
 
 customer_bp = Blueprint('customer', __name__, url_prefix = '/customer')
 
@@ -116,10 +118,10 @@ def update_cart(product_id):
     cart_item = CartItem.query.filter_by(user_id=current_user.id, product_id=product_id, product_status=True).first_or_404()
     product = Product.query.get_or_404(product_id)
     action = request.form.get('action')
-    if action == 'increment' and cart_item.quantity < product.quantity:
+    if action == 'increment' and cart_item.quantity < product.quantity and product.available and product.is_active:
         cart_item.quantity += 1
         flash('Quantity Updated...', 'cart')
-    elif action == 'decrement' and cart_item.quantity > 1:
+    elif action == 'decrement' and cart_item.quantity > 1 and product.available and product.is_active:
         cart_item.quantity -= 1
         flash('Quantity Updated...', 'cart')
     elif action == 'decrement' and cart_item.quantity == 1:
@@ -281,9 +283,25 @@ def success():
                     return redirect(url_for('customer.view_cart'))
                 item.product_status = False
             db.session.commit()
+            invoice = Invoice(
+                # order_id=None,  
+                gst_percent=12.0,
+                total_before_tax=float(session.metadata['discounted_total']),
+                total_gst=float(session.metadata['gst_amount']),
+                total_after_tax=float(session.metadata['final_amount'])
+            )
+            db.session.add(invoice)
+            db.session.commit()
+            generate_invoice_pdf(invoice)
+            customer_email = session.customer_details.email
+            send_invoice_email(customer_email, invoice)
             flash('Payment successful! Your order is confirmed...', 'cart')
+            flash('Check your email for the invoice...', 'cart')
         else:
             flash('Payment not completed...', 'cart')
     except stripe.error.StripeError as e:
         flash(f'Error verifying payment: {str(e)}', 'cart')
     return redirect(url_for('customer.view_cart'))
+    
+
+

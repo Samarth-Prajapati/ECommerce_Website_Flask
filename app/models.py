@@ -131,7 +131,7 @@ class OrderItem(db.Model):
 class Invoice(db.Model):
     __tablename__ = 'invoices'
     id = db.Column(db.Integer, primary_key=True)
-    order_id = db.Column(db.Integer, db.ForeignKey('orders.id'), unique=True, nullable=False)
+    order_id = db.Column(db.Integer, db.ForeignKey('orders.id'), unique=True)
     gst_percent = db.Column(db.Float, nullable=False)
     total_before_tax = db.Column(db.Float, nullable=False)
     total_gst = db.Column(db.Float, nullable=False)

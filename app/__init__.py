@@ -8,6 +8,8 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from flask_wtf.csrf import CSRFProtect
 from authlib.integrations.flask_client import OAuth
 import stripe
+from flask_migrate import Migrate
+from flask_mail import Mail, Message
 
 app = Flask(__name__)
 
@@ -24,6 +26,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{user}:{password}@{hos
 
 # Initializing SQLAlchemy
 db = SQLAlchemy(app)
+
+migrate = Migrate(app, db)
+
+mail = Mail(app)
 
 # Login Manager 
 csrf = CSRFProtect(app)
