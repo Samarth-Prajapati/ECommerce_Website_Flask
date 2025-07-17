@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, abort
-from ..models import Product, User, Category, CartItem, Review, Discount, Invoice
+from ..models import Product, User, Category, CartItem, Review, Discount, Invoice, Order, OrderItem, DiscountType, OrderStatus
 from flask_login import login_required, current_user
 from .. import db, stripe_publishable_key
 from ..forms import AddToCartForm, ReviewForm
@@ -218,6 +218,25 @@ def checkout():
     cart_base = round(discounted_total, 2)
     gst_amount = round(cart_base * gst_percent / 100, 2)
     final_amount = round(cart_base + gst_amount, 2)
+    order = Order(
+        user_id=current_user.id,
+        amount=final_amount,
+        status=OrderStatus.PENDING,
+        invoice='NULL',  
+        payment_id='NULL',  
+        discount_id=selected_discount_id if selected_discount_id else None
+    )
+    db.session.add(order)
+    db.session.flush()  
+    for item in cart_items:
+        order_item = OrderItem(
+            order_id=order.id,
+            product_id=item.product_id,
+            quantity=item.quantity,
+            price=item.product.price
+        )
+        db.session.add(order_item)
+    db.session.commit()
     try:
         line_items = [
             {
@@ -250,6 +269,7 @@ def checkout():
             discounts=[{'coupon': coupon_id}] if coupon_id else [],
             metadata={
                 'user_id': str(current_user.id),
+                'order_id': str(order.id),
                 'original_total': str(original_total),
                 'discounted_total': str(discounted_total),
                 'gst_amount': str(gst_amount),
@@ -272,6 +292,7 @@ def success():
     try:
         session = stripe.checkout.Session.retrieve(session_id)
         if session.payment_status == 'paid' and session.metadata['user_id'] == str(current_user.id):
+            order = Order.query.filter_by(id=int(session.metadata['order_id']), user_id=current_user.id).first_or_404()
             cart_items = CartItem.query.filter_by(user_id=current_user.id, product_status=True).all()
             for item in cart_items:
                 product = Product.query.get(item.product_id)
@@ -282,26 +303,46 @@ def success():
                     flash(f'Payment failed: Not enough stock for {product.name}.', 'cart')
                     return redirect(url_for('customer.view_cart'))
                 item.product_status = False
-            db.session.commit()
+            order.status = OrderStatus.SUCCESS
+            order.payment_id = session.payment_intent
             invoice = Invoice(
-                # order_id=None,  
+                order_id=order.id,  
                 gst_percent=12.0,
                 total_before_tax=float(session.metadata['discounted_total']),
                 total_gst=float(session.metadata['gst_amount']),
                 total_after_tax=float(session.metadata['final_amount'])
             )
             db.session.add(invoice)
+            db.session.flush()
+            invoice_path = generate_invoice_pdf(invoice) 
+            order.invoice = invoice_path
             db.session.commit()
-            generate_invoice_pdf(invoice)
             customer_email = session.customer_details.email
             send_invoice_email(customer_email, invoice)
             flash('Payment successful! Your order is confirmed...', 'cart')
             flash('Check your email for the invoice...', 'cart')
+            return render_template(
+                'product/success.html',
+                order=order,
+                invoice=invoice,
+                title='Payment Successful'
+            )
         else:
+            order = Order.query.filter_by(id=int(session.metadata['order_id']), user_id=current_user.id).first()
+            if order:
+                order.status = OrderStatus.CANCELED
+                db.session.commit()
             flash('Payment not completed...', 'cart')
     except stripe.error.StripeError as e:
         flash(f'Error verifying payment: {str(e)}', 'cart')
     return redirect(url_for('customer.view_cart'))
     
+@customer_bp.route('/orders', methods=['GET'])
+@login_required
+def orders():
+    if current_user.role_id != 3:
+        abort(403)
+    orders = Order.query.filter_by(user_id=current_user.id).order_by(Order.id.desc()).all()
+    return render_template('product/order_history.html', orders=orders, title="My Orders")
 
 

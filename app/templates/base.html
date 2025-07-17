@@ -114,6 +114,11 @@
             {% endif %} {% if current_user.role_id == 3 %}
             <a
               class="nav-link text-light"
+              href="{{ url_for('customer.orders') }}"
+              >My Orders</a
+            >
+            <a
+              class="nav-link text-light"
               href="{{ url_for('customer.view_cart') }}"
               >Cart</a
             >

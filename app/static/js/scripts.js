@@ -1,6 +1,10 @@
 $(document).ready(function () {
   // Data Table 
-    $('#userTable,#productTable,#discountTable').DataTable();
+    $('#userTable,#productTable,#discountTable,#customerOrdersTable').DataTable();
+
+    $('#downloadReport,#downloadReport1').on('click', function (e) {
+        alert('Downloading the full report and sending email...');
+    });
   });
 
 // Toast messages

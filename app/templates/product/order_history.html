@@ -1,0 +1,53 @@
+{% extends 'base.html' %} {% block title %}My Orders{% endblock %} {% block body
+%}
+
+<div class="container my-5">
+  <h2 class="mb-4 fw-bold text-dark text-center">🛒 Order History</h2>
+
+  {% if orders %}
+  <div class="table-responsive rounded-4 shadow-sm">
+    <table class="table table-bordered align-middle text-center">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Order ID</th>
+          <th>Status</th>
+          <th>Amount</th>
+          <th>Payment ID</th>
+          <th>Date</th>
+          <th>Invoice</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>#{{ order.id }}</td>
+          <td>{{ order.status.name }}</td>
+          <td>₹ {{ order.amount }}</td>
+          <td>{{ order.payment_id or '-' }}</td>
+          <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td>
+            {% if order.invoice %}
+            <a
+              href="{{ url_for('static', filename=order.invoice) }}"
+              target="_blank"
+              class="btn btn-sm btn-outline-dark rounded-5"
+              download="invoice.pdf"
+              ><i class="bi bi-arrow-down"></i
+            ></a>
+            {% else %} - {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="alert alert-info mt-4 text-center">
+    You have not placed any orders yet.
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

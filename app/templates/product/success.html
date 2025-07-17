@@ -1,0 +1,89 @@
+{% extends 'base.html' %} {% block title %}Payment Successful{% endblock %} {%
+block body %}
+
+<!-- Toast Notification -->
+<div class="toast-container position-fixed top-5 p-2" style="z-index: 1080">
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %} {% for category, message in messages %} {% if category ==
+  'register_pm1' or category == 'cart' or category == 'product' %}
+  <div
+    class="toast align-items-center text-white bg-secondary border-0"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+  >
+    <div class="d-flex">
+      <div class="toast-body">{{ message | safe }}</div>
+      <button
+        type="button"
+        class="btn-close btn-close-white me-2 m-auto"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+      ></button>
+    </div>
+  </div>
+  {% endif %} {% endfor %} {% endif %} {% endwith %}
+</div>
+
+<div class="container my-5">
+  <a
+    href="{{ url_for('customer.view_cart') }}"
+    class="btn btn-dark btn-sm rounded-4"
+    ><i class="bi bi-arrow-left"></i
+  ></a>
+  <br />
+  <div class="card shadow-lg border-0 rounded-4 p-4">
+    <div class="text-center">
+      <h2 class="text-success fw-bold mb-3">🎉 Payment Successful!</h2>
+      <p class="lead">
+        Thank you for your order, <strong>{{ current_user.fname }}</strong>.
+      </p>
+    </div>
+
+    <hr />
+
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <h5 class="text-dark fw-bold">👤 Customer Details</h5>
+        <br />
+        <p>
+          <strong>Name:</strong> {{ current_user.fname }} {{ current_user.lname
+          }}
+        </p>
+        <p><strong>Email:</strong> {{ current_user.email }}</p>
+      </div>
+      <div class="col-md-6">
+        <h5 class="text-dark fw-bold">💳 Payment Details</h5>
+        <br />
+        <p><strong>Order ID:</strong> {{ order.id }}</p>
+        <p><strong>Payment ID:</strong> {{ order.payment_id }}</p>
+        <p><strong>Total Paid:</strong> $ {{ invoice.total_after_tax }}</p>
+        <p>
+          <strong>GST ({{ invoice.gst_percent }}%):</strong> $ {{
+          invoice.total_gst }}
+        </p>
+      </div>
+    </div>
+
+    <div class="alert alert-success mt-4 rounded-4 text-center fw-semibold">
+      Your invoice has been sent to your email.<br />
+      You can also
+      <a
+        href="{{ url_for('static', filename=invoice.pdf_path) }}"
+        class="fw-bold text-decoration-underline"
+        download="invoice.pdf"
+        >download</a
+      >
+      it here.
+    </div>
+
+    <div class="text-center mt-4">
+      <a
+        href="{{ url_for('customer.clothes', category_name='ALL') }}"
+        class="btn btn-dark rounded-4 fw-bold px-4"
+        >Continue Shopping</a
+      >
+    </div>
+  </div>
+</div>
+{% endblock %}

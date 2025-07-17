@@ -86,6 +86,7 @@ def google_callback():
         lname = user_info.get('family_name', 'Google')
         username = email.split('@')[0]
         user = User.query.filter_by(email=email).first()
+        u = User.query.filter_by(email=email, is_active=True).first()
         if not user:
             user = User(
                 fname=fname.upper(),
@@ -109,6 +110,10 @@ def google_callback():
             return redirect(url_for('auth.login'))
         elif user.is_active:
             login_user(user)
+            flash('Logged In With Google...', 'oauth')
+            return redirect(url_for('main.home'))
+        elif User.query.filter_by(email=email, is_active=True).first():
+            login_user(u)
             flash('Logged In With Google...', 'oauth')
             return redirect(url_for('main.home'))
         elif User.query.filter_by(email=email, is_active=False).first():
@@ -153,6 +158,7 @@ def github_callback():
         lname = ' '.join(resp.get('name', 'GitHub').split(' ')[1:]) if resp.get('name') and len(resp.get('name').split()) > 1 else 'GitHub'
         username = resp.get('login')
         user = User.query.filter_by(email=email).first()
+        u= User.query.filter_by(email=email, is_active=True).first()
         if not user:
             user = User(
                 fname=fname.upper(),
@@ -177,6 +183,10 @@ def github_callback():
         elif user.is_active:
             login_user(user)
             flash('Logged In With GitHub...', 'oauth')
+            return redirect(url_for('main.home'))
+        elif User.query.filter_by(email=email, is_active=True).first():
+            login_user(u)
+            flash('Logged In With Github...', 'oauth')
             return redirect(url_for('main.home'))
         elif User.query.filter_by(email=email, is_active=False).first():
             user = User(

@@ -11,4 +11,5 @@ stripe
 reportlab
 flask-migrate
 Flask-Mail
+pandas
 

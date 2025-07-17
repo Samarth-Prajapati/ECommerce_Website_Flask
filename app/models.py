@@ -111,7 +111,7 @@ class Order(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
     status = db.Column(db.Enum(OrderStatus), default=OrderStatus.PENDING, nullable=False)
-    invoice = db.Column(db.String(255), nullable=False)
+    invoice = db.Column(db.String(255), nullable=True)
     payment_id = db.Column(db.String(100), nullable=False)
     discount_id = db.Column(db.Integer, db.ForeignKey('discounts.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

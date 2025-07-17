@@ -92,7 +92,21 @@ block body %}
       type="button"
     >
       Register Product Manager
-    </button>
+    </button> </a
+  ><br />
+  <a
+    href="{{ url_for('product.download_product_report') }}"
+    class="btn btn-outline-dark rounded-4 justify-content-end mx-2"
+    id="downloadReport"
+  >
+    Full Product Report
+  </a>
+  <a
+    href="{{ url_for('product.download_user_report') }}"
+    class="btn btn-outline-dark rounded-4 justify-content-end"
+    id="downloadReport1"
+  >
+    Full User Report
   </a>
 </div>
 
