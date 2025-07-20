@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, flash, redirect, url_for
+from flask import Flask, render_template, session, flash, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 from .config import Config
 import pymysql
@@ -62,6 +62,16 @@ oauth.register(
 # Stripe Payment Configuration
 stripe.api_key = app.config['STRIPE_SECRET_KEY']
 stripe_publishable_key = app.config['STRIPE_PUBLISHABLE_KEY']
+
+
+# Allow HTML forms to simulate PUT, PATCH, DELETE using a hidden input:
+# <input type="hidden" name="_method" value="PUT">
+@app.before_request
+def override_method():
+    if request.method == 'POST':
+        override = request.form.get('_method', '').upper()
+        if override in ['PUT', 'PATCH', 'DELETE']:
+            request.environ['REQUEST_METHOD'] = override
 
 # Importing models for Initialization of Tables
 from .models import Role, User, Category, Product, CartItem, Discount, Order, OrderItem, Invoice, Review, Report 
