@@ -23,6 +23,7 @@ def dashboard():
     product_count = Product.query.filter_by(created_by=current_user.id, is_active=True).count()
     products = Product.query.filter_by(created_by=current_user.id,is_active=True).all()
     discounts = Discount.query.filter_by(created_by=current_user.id,is_active=True).all()
+    discounts_count = Discount.query.filter_by(created_by=current_user.id,is_active=True).count()
     orders = db.session.query(Order)\
         .join(OrderItem, Order.id == OrderItem.order_id)\
         .join(Product, Product.id == OrderItem.product_id)\
@@ -31,7 +32,15 @@ def dashboard():
         .options(joinedload(Order.user))\
         .distinct()\
         .all()
-    return render_template('product/dashboard.html', product_count = product_count,products = products,discounts = discounts,orders=orders,title='product')
+    orders_count = db.session.query(Order)\
+        .join(OrderItem, Order.id == OrderItem.order_id)\
+        .join(Product, Product.id == OrderItem.product_id)\
+        .filter(Product.created_by == current_user.id)\
+        .filter(Order.status == OrderStatus.SUCCESS)\
+        .options(joinedload(Order.user))\
+        .distinct()\
+        .count()
+    return render_template('product/dashboard.html', product_count = product_count,products = products,discounts = discounts,orders=orders,title='product',discounts_count=discounts_count, orders_count=orders_count)
 
 # Add Product Manager  
 @product_bp.route('/dashboard/add_product', methods=['GET', 'POST'])

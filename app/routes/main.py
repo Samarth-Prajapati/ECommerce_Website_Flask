@@ -2,6 +2,8 @@ from flask import Blueprint, render_template
 from app import db
 from app.models import User
 from ..passwordHash import generate_password_hash
+from flask_login import current_user
+from app.models import CartItem
 
 main_bp = Blueprint('main', __name__)
 

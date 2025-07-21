@@ -6,6 +6,8 @@ from ..forms import AddToCartForm, ReviewForm
 import stripe
 from app.utils.pdf_generator import generate_invoice_pdf
 from app.utils.email_utils import send_invoice_email
+from flask_wtf.csrf import validate_csrf
+from wtforms.validators import ValidationError
 
 customer_bp = Blueprint('customer', __name__, url_prefix = '/customer')
 
@@ -345,4 +347,54 @@ def orders():
     orders = Order.query.filter_by(user_id=current_user.id).order_by(Order.id.desc()).all()
     return render_template('product/order_history.html', orders=orders, title="My Orders")
 
+@customer_bp.route('/order-again/<int:order_id>', methods=['POST'])
+@login_required
+def order_again(order_id):
+    if current_user.role_id != 3:
+        abort(403)
+    try:
+        validate_csrf(request.form.get('csrf_token'))
+    except ValidationError:
+        flash("Invalid CSRF token. Please try again...", "cart")
+        return redirect(url_for("customer.orders"))
+    order = Order.query.filter_by(id=order_id, user_id=current_user.id).first_or_404()
+    items_added = False
+    for item in order.order_items:
+        product = Product.query.get(item.product_id)
+        if not product or not product.is_active or not product.available or product.quantity <= 0:
+            flash(f"Product {product.name if product else item.product_id} is no longer available...", "cart")
+            continue
+        if item.quantity > product.quantity:
+            flash(f"Not enough stock for product {product.name}. Available: {product.quantity}", "cart")
+            continue
+        existing_item = CartItem.query.filter_by(
+            user_id=current_user.id,
+            product_id=item.product_id,
+            product_status=True
+        ).first()
+        try:
+            if existing_item:
+                existing_item.quantity += item.quantity
+            else:
+                new_cart_item = CartItem(
+                    user_id=current_user.id,
+                    product_id=item.product_id,
+                    quantity=item.quantity,
+                    product_status=True
+                )
+                db.session.add(new_cart_item)
+            items_added = True
+        except Exception as e:
+            flash(f"Failed to add product {product.name} to cart: {str(e)}", "cart")
+            continue
+    try:
+        db.session.commit()
+        if items_added:
+            flash("Order items added to cart successfully...", "cart")
+        else:
+            flash("No items could be added to the cart...", "cart")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"An error occurred while adding items to the cart: {str(e)}", "cart")
+    return redirect(url_for("customer.orders"))
 

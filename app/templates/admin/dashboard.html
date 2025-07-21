@@ -81,11 +81,36 @@ block body %}
   </div>
 </div>
 <hr />
-<div class="container mt-2">
-  <h2 class="mb-4 text-center">User Management</h2>
-</div>
 <!-- Registration Button   -->
 <div class="container my-3 d-flex justify-content-end">
+  <nav>
+    <div class="nav nav-tabs mx-5" id="nav-tab" role="tablist">
+      <button
+        class="nav-link active text-dark"
+        id="nav-home-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#nav-home"
+        type="button"
+        role="tab"
+        aria-controls="nav-home"
+        aria-selected="true"
+      >
+        User Management
+      </button>
+      <button
+        class="nav-link text-dark"
+        id="nav-profile-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#nav-profile"
+        type="button"
+        role="tab"
+        aria-controls="nav-profile"
+        aria-selected="false"
+      >
+        Products
+      </button>
+    </div>
+  </nav>
   <a href="{{ url_for('admin.add_product_manager') }}">
     <button
       class="btn btn-dark border border-2 border-light rounded-4 justify-content-end"
@@ -109,117 +134,131 @@ block body %}
     Full User Report
   </a>
 </div>
-
-<!-- User Management Table -->
-<div class="container-fluid">
-  <table
-    id="userTable"
-    class="table table-striped table-bordered align-middle text-center"
+<div class="tab-content my-4" id="nav-tabContent">
+  <div
+    class="tab-pane fade show active"
+    id="nav-home"
+    role="tabpanel"
+    aria-labelledby="nav-home-tab"
+    tabindex="0"
   >
-    <thead class="table-dark">
-      <tr>
-        <th>Sr. No.</th>
-        <th>Full Name</th>
-        <th>Gender</th>
-        <th>Email</th>
-        <th>Contact</th>
-        <th>Address</th>
-        <th>City</th>
-        <th>State</th>
-        <th>Role</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for user in users %}
-      <tr>
-        <td>{{ loop.index }}</td>
-        <td>{{ user.fname }} {{ user.lname }}</td>
-        <td>{{ user.gender.name if user.gender else 'N/A' }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.contact or 'N/A' }}</td>
-        <td>{{ user.address or 'N/A' }}</td>
-        <td>{{ user.city or 'N/A' }}</td>
-        <td>{{ user.state or 'N/A' }}</td>
-        <td>
-          {% if user.role_id == 1 %} ADMIN {% elif user.role_id == 2 %} PRODUCT
-          MANAGER {% else %} CUSTOMER {% endif %}
-        </td>
-        <td>
-          <a href="{{ url_for('admin.edit', id=user.id) }}">
-            <button type="button" class="btn btn-primary rounded-4 m-1">
-              <i class="bi bi-pencil-square"></i></button
-          ></a>
-          <a
-            href="{{ url_for('admin.delete', id=user.id) }}"
-            onclick="return confirm('Are you sure you want to delete this user ?');"
-          >
-            <button type="button" class="btn btn-danger rounded-4 m-1">
-              <i class="bi bi-trash3-fill"></i>
-            </button>
-          </a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
-<br />
-<hr />
-<br />
-
-<div class="container mt-2">
-  <h2 class="mb-4 text-center">Products</h2>
-</div>
-<!-- Products Table -->
-<div class="container-fluid">
-  <table
-    id="productTable"
-    class="table table-striped table-bordered align-middle text-center"
+    <!-- User Management Table -->
+    <div class="container-fluid">
+      <table
+        id="userTable"
+        class="table table-striped table-bordered align-middle text-center"
+      >
+        <thead class="table-dark">
+          <tr>
+            <th>Sr. No.</th>
+            <th>Full Name</th>
+            <th>Gender</th>
+            <th>Email</th>
+            <th>Contact</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Role</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ user.fname }} {{ user.lname }}</td>
+            <td>{{ user.gender.name if user.gender else 'N/A' }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.contact or 'N/A' }}</td>
+            <td>{{ user.address or 'N/A' }}</td>
+            <td>{{ user.city or 'N/A' }}</td>
+            <td>{{ user.state or 'N/A' }}</td>
+            <td>
+              {% if user.role_id == 1 %} ADMIN {% elif user.role_id == 2 %}
+              PRODUCT MANAGER {% else %} CUSTOMER {% endif %}
+            </td>
+            <td>
+              <a href="{{ url_for('admin.edit', id=user.id) }}">
+                <button type="button" class="btn btn-primary rounded-4 m-1">
+                  <i class="bi bi-pencil-square"></i></button
+              ></a>
+              <a
+                href="{{ url_for('admin.delete', id=user.id) }}"
+                onclick="return confirm('Are you sure you want to delete this user ?');"
+              >
+                <button type="button" class="btn btn-danger rounded-4 m-1">
+                  <i class="bi bi-trash3-fill"></i>
+                </button>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <br />
+    <hr />
+    <br />
+  </div>
+  <div
+    class="tab-pane fade"
+    id="nav-profile"
+    role="tabpanel"
+    aria-labelledby="nav-profile-tab"
+    tabindex="0"
   >
-    <thead class="table-dark">
-      <tr>
-        <th>Sr. No.</th>
-        <th>Product Name</th>
-        <!-- <th>Description</th> -->
-        <th>Price</th>
-        <th>Quantity</th>
-        <th>Category</th>
-        <th>Show Image</th>
-        <th>Created By</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for product in products %}
-      <tr>
-        <td>{{ loop.index }}</td>
-        <td>{{ product.name }}</td>
-        <!-- <td>{{ product.description }}</td> -->
-        <td>{{ product.price }}</td>
-        <td>{{ product.quantity }}</td>
-        <td>{{ product.category.name if product.category else 'N/A' }}</td>
-        <td>
-          <a
-            href="{{ product.image }}"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn btn-secondary rounded-4 m-1"
-            >Tap</a
-          >
-        </td>
-        <td>{{ product.creator.fname }} {{ product.creator.lname }}</td>
-        <td>
-          {% if product.available and product.quantity > 0 %}
-          <span class="badge bg-success">ACTIVE</span>
-          {% else %}
-          <span class="badge bg-danger">INACTIVE</span>
-          {% endif %}
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    <!-- Products Table -->
+    <div class="container-fluid">
+      <table
+        id="productTable"
+        class="table table-striped table-bordered align-middle text-center"
+      >
+        <thead class="table-dark">
+          <tr>
+            <th>Sr. No.</th>
+            <th>Product Name</th>
+            <!-- <th>Description</th> -->
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Category</th>
+            <th>Show Image</th>
+            <th>Created By</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in products %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ product.name }}</td>
+            <!-- <td>{{ product.description }}</td> -->
+            <td>{{ product.price }}</td>
+            <td>{{ product.quantity }}</td>
+            <td>{{ product.category.name if product.category else 'N/A' }}</td>
+            <td>
+              <a
+                href="{{ product.image }}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-secondary rounded-4 m-1"
+                >Tap</a
+              >
+            </td>
+            <td>{{ product.creator.fname }} {{ product.creator.lname }}</td>
+            <td>
+              {% if product.available and product.quantity > 0 %}
+              <span class="badge bg-success">ACTIVE</span>
+              {% else %}
+              <span class="badge bg-danger">INACTIVE</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <br />
+  </div>
 </div>
-<br />
+
 {% endblock %}

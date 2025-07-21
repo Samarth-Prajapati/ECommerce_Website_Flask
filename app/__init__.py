@@ -71,7 +71,7 @@ def override_method():
     if request.method == 'POST':
         override = request.form.get('_method', '').upper()
         if override in ['PUT', 'PATCH', 'DELETE']:
-            request.environ['REQUEST_METHOD'] = override
+            request.environ['REQUEST_METHOD'] = override    
 
 # Importing models for Initialization of Tables
 from .models import Role, User, Category, Product, CartItem, Discount, Order, OrderItem, Invoice, Review, Report 
@@ -92,3 +92,10 @@ from .routes import register_blueprints
 
 # Registering Blueprints
 register_blueprints(app)
+
+@app.context_processor
+def inject_cart_count():
+    cart_count = 0
+    if current_user.is_authenticated and current_user.role_id == 3:
+        cart_count = CartItem.query.filter_by(user_id=current_user.id, product_status=True).count()
+    return dict(cart_count=cart_count)

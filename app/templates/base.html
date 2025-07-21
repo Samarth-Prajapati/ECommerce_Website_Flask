@@ -120,8 +120,12 @@
             <a
               class="nav-link text-light"
               href="{{ url_for('customer.view_cart') }}"
-              >Cart</a
-            >
+              >Cart {% if cart_count > 0 %}
+              <span class="badge bg-light text-dark rounded-pill"
+                >{{ cart_count }}</span
+              >
+              {% endif %}
+            </a>
             <div class="text-white m-2">
               <a
                 href="{{ url_for('profile.show') }}"
