@@ -50,7 +50,7 @@ def add_product_manager():
     return render_template('admin/add_product_manager.html', form=form, title='add_product_manager')
 
 # Update 
-@admin_bp.route('/dashboard/edit/<int:id>', methods=['GET', 'POST'])
+@admin_bp.route('/dashboard/edit/<int:id>', methods=['GET', 'POST', 'PUT'])
 @login_required
 def edit(id):
     formR = RegisterForm()
@@ -58,7 +58,7 @@ def edit(id):
         flash('Please Login...', 'profile')
         return redirect(url_for('main.home'))
     profile_data = User.query.get_or_404(id)
-    if request.method == 'POST':
+    if request.method in ['POST', 'PUT']:
         password = request.form.get('password')
         confirm_password = request.form.get('confirm_password')
         if password != confirm_password:
@@ -69,10 +69,11 @@ def edit(id):
         profile_data.address = request.form.get('address').upper()
         profile_data.city = request.form.get('city').upper()
         profile_data.state = request.form.get('state').upper()
-        db.session.commit() 
+        db.session.commit()
         flash('Profile Updated Successfully...', 'register_pm1')
         return redirect(url_for('admin.dashboard'))
-    return render_template('admin/edit.html', profile_data = profile_data, form = formR,title='edit')
+    return render_template('admin/edit.html', profile_data=profile_data, form=formR, title='edit')
+
 
 # Delete 
 @admin_bp.route('/dashboard/delete/<int:id>', methods=['GET'])
