@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block title %}Chat with Shopify{% endblock %} {%
+block body %}
+<div class="container my-5">
+  <h2 class="text-center mb-4">Chat with Shopify</h2>
+  <div class="card p-4 bg-light rounded-4">
+    <form method="POST" action="{{ url_for('chatbot.chatbot') }}">
+      {{ form.hidden_tag() }}
+      <div class="mb-3">
+        <label for="query" class="form-label text-dark fw-semibold"
+          >Ask us anything about Shopify!</label
+        >
+        {{ form.query(class="form-control bg-light text-dark border-secondary
+        rounded-4", rows="4", placeholder="E.g., How do I add a product to my
+        cart?") }}
+      </div>
+      {{ form.submit(class="btn btn-dark text-light fw-bold rounded-4") }}
+    </form>
+    {% if response %}
+    <div class="mt-4">
+      <h4>Your Answer:</h4>
+      <p class="bg-white p-3 rounded-4">{{ response | safe }}</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

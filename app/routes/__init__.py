@@ -4,6 +4,7 @@ from .admin import admin_bp
 from .user_profile import profile_bp
 from .product import product_bp
 from .customer import customer_bp
+from .chatbot import chatbot_bp
 
 def register_blueprints(app):
     app.register_blueprint(auth_bp)
@@ -12,3 +13,4 @@ def register_blueprints(app):
     app.register_blueprint(profile_bp)
     app.register_blueprint(product_bp)
     app.register_blueprint(customer_bp)
+    app.register_blueprint(chatbot_bp)

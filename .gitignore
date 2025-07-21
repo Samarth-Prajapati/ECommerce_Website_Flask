@@ -3,3 +3,7 @@ venv
 app\__pycache__
 app\utils\__pycache__
 app\routes\__pycache__
+extracted_data.txt
+faiss_index
+app\static\invoices
+app\static\reports

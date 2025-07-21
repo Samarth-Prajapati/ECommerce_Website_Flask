@@ -23,3 +23,4 @@ class Config:
     MAIL_USERNAME = os.getenv('MAIL_USERNAME', 'samarthp475@gmail.com')
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD', 'ietc tlsk ugqj bynq')
     MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER', 'samarthp475@gmail.com')
+    GROQ_API_KEY = os.getenv('GROQ_API_KEY')
