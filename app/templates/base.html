@@ -71,7 +71,7 @@
             <a
               class="nav-link text-light"
               href="{{ url_for('chatbot.chatbot') }}"
-              ><i class="bi bi-robot"></i>
+              ><i class="bi bi-robot"></i> Chat with Us</a
             </a>
             {% if not current_user.is_authenticated %}
             <a href="{{ url_for('auth.login') }}"
