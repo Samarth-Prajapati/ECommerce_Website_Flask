@@ -105,7 +105,7 @@ body %}
           id="password"
           name="password"
           placeholder="Enter your password"
-          value="{{ profile_data.password }}"
+          required
         />
       </div>
 
@@ -119,7 +119,7 @@ body %}
           id="confirm_password"
           name="confirm_password"
           placeholder="Confirm your password"
-          value="{{ profile_data.password }}"
+          required
         />
       </div>
 
@@ -135,6 +135,7 @@ body %}
           pattern="[0-9]{10}"
           placeholder="Enter your contact number"
           value="{{ profile_data.contact }}"
+          required
         />
       </div>
 
@@ -149,6 +150,7 @@ body %}
           name="address"
           placeholder="Enter your address"
           value="{{ profile_data.address }}"
+          required
         />
       </div>
 
@@ -161,6 +163,7 @@ body %}
           name="city"
           placeholder="Enter your city"
           value="{{ profile_data.city }}"
+          required
         />
       </div>
 
@@ -175,6 +178,7 @@ body %}
           name="state"
           placeholder="Enter your state"
           value="{{ profile_data.state }}"
+          required
         />
       </div>
 

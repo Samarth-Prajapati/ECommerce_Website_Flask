@@ -97,5 +97,7 @@ register_blueprints(app)
 def inject_cart_count():
     cart_count = 0
     if current_user.is_authenticated and current_user.role_id == 3:
-        cart_count = CartItem.query.filter_by(user_id=current_user.id, product_status=True).count()
+        cart_count = db.session.query(db.func.sum(CartItem.quantity)).filter_by(
+            user_id=current_user.id, product_status=True
+        ).scalar() or 0
     return dict(cart_count=cart_count)
