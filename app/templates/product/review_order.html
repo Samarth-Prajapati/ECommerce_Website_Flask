@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Review Order{% endblock %}
+{% block body %}
+
+<!-- Toast Notification -->
+<div class="toast-container position-fixed top-5 p-2" style="z-index: 1080">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        {% if category in ['register_pm1', 'delete', 'cart', 'review'] %}
+        <div class="toast align-items-center text-white bg-secondary border-0" role="alert">
+          <div class="d-flex">
+            <div class="toast-body">{{ message | safe }}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+</div>
+
+<div class="container mt-5">
+  <h2 class="mb-4">Review Your Products</h2>
+
+  {% for product, form, existing_review in review_forms %}
+  <div class="row border p-3 mb-4">
+    <div class="col-md-3">
+      <img src="{{ product.image }}" class="img-fluid rounded" alt="{{ product.name }}">
+    </div>
+    <div class="col-md-9">
+      <h4>{{ product.name }}</h4>
+      <p>{{ product.description }}</p>
+
+      <form method="POST" action="{{ url_for('customer.reviews', order_id=order.id) }}">
+        {{ form.hidden_tag() }}
+        <input type="hidden" name="product_id" value="{{ form.product_id.data }}">
+        <div class="mb-3">
+          <label for="{{ form.rating.id }}" class="form-label">{{ form.rating.label.text }}</label>
+          <select class="form-select" id="{{ form.rating.id }}"
+                  name="{{ form.rating.name }}"
+                  {% if existing_review %}disabled{% endif %}>
+            {% for value, label in form.rating.choices %}
+              <option value="{{ value }}" {% if form.rating.data == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="{{ form.comment.id }}" class="form-label">{{ form.comment.label.text }}</label>
+          <textarea class="form-control"
+                    id="{{ form.comment.id }}"
+                    name="{{ form.comment.name }}"
+                    rows="3"
+                    {% if existing_review %}disabled{% endif %}>{{ form.comment.data }}</textarea>
+        </div>
+
+        {% if not existing_review %}
+        <button type="submit" class="btn btn-dark text-light rounded-4 w-100">
+          {{ form.submit.label.text }}
+        </button>
+        {% else %}
+        <p class="mt-2 text-success">You have already reviewed this product.</p>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+  {% endfor %}
+
+  <div class="text-center m-2">
+    <a href="{{ url_for('customer.clothes', category_name='ALL') }}" class="btn btn-dark rounded-4 fw-bold">Continue Shopping</a>
+  </div>
+  <br>
+</div>
+{% endblock %}

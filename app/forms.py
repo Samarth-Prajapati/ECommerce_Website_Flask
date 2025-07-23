@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, TextAreaField, FloatField, IntegerField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, TextAreaField, FloatField, IntegerField, BooleanField, HiddenField
 from wtforms.validators import DataRequired, Email, Length, EqualTo, Regexp, Optional, URL, NumberRange, ValidationError
 
 class LoginForm(FlaskForm):
@@ -34,6 +34,7 @@ class AddToCartForm(FlaskForm):
     submit = SubmitField('Add to Cart')
 
 class ReviewForm(FlaskForm):
+    product_id = HiddenField('Product ID', validators=[DataRequired()])
     rating = SelectField('Rating', choices=[(i, str(i)) for i in range(1, 6)], coerce=int, validators=[DataRequired()])
     comment = TextAreaField('Comment', validators=[Optional(), Length(max=1000)])
     submit = SubmitField('Submit Review')

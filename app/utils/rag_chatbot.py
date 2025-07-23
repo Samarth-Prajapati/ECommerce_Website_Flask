@@ -63,3 +63,5 @@ def get_chatbot_response(query):
     """Function to get a response from the chatbot."""
     result = qa_chain({"query": query})
     return result["result"], result["source_documents"]
+
+

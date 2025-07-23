@@ -77,7 +77,12 @@ block body %}
       it here.
     </div>
 
-    <div class="text-center mt-4">
+    <div class="text-center m-2">
+      <a
+        href="{{ url_for('customer.reviews', order_id=order.id) }}"
+        class="btn btn-dark rounded-4 fw-bold px-4"
+        >Review Products</a
+      >
       <a
         href="{{ url_for('customer.clothes', category_name='ALL') }}"
         class="btn btn-dark rounded-4 fw-bold px-4"

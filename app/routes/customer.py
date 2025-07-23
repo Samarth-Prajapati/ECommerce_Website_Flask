@@ -142,34 +142,34 @@ def remove_from_cart(product_id):
     flash('Product Removed from Cart.', 'cart')
     return redirect(url_for('customer.view_cart', product_id=product_id))
 
-@customer_bp.route('/product/<int:product_id>/review', methods=['POST'])
-@login_required
-def submit_review(product_id):
-    if not current_user.is_authenticated or current_user.role_id != 3:
-        flash('Please login as a Customer to submit a review...', 'review')
-        return redirect(url_for('customer.product_details', product_id=product_id))
-    form = ReviewForm()
-    if form.validate_on_submit():
-        product = Product.query.get_or_404(product_id)
-        existing_review = Review.query.filter_by(user_id=current_user.id, product_id=product_id, is_active=True).first()
-        if existing_review:
-            flash('You have already reviewed this product...', 'review')
-            return redirect(url_for('customer.product_details', product_id=product_id))
-        review = Review(
-            user_id=current_user.id,
-            product_id=product_id,
-            rating=form.rating.data,
-            comments=form.comment.data,
-            is_active=True
-        )
-        db.session.add(review)
-        db.session.commit()
-        flash('Review Submitted Successfully...', 'review')
-        return redirect(url_for('customer.product_details', product_id=product_id))
-    for field, errors in form.errors.items():
-        for error in errors:
-            flash(f'Error in {field}: {error}', 'review')
-    return redirect(url_for('customer.product_details', product_id=product_id))
+# @customer_bp.route('/product/<int:product_id>/review', methods=['POST'])
+# @login_required
+# def submit_review(product_id):
+#     if not current_user.is_authenticated or current_user.role_id != 3:
+#         flash('Please login as a Customer to submit a review...', 'review')
+#         return redirect(url_for('customer.product_details', product_id=product_id))
+#     form = ReviewForm()
+#     if form.validate_on_submit():
+#         product = Product.query.get_or_404(product_id)
+#         existing_review = Review.query.filter_by(user_id=current_user.id, product_id=product_id, is_active=True).first()
+#         if existing_review:
+#             flash('You have already reviewed this product...', 'review')
+#             return redirect(url_for('customer.product_details', product_id=product_id))
+#         review = Review(
+#             user_id=current_user.id,
+#             product_id=product_id,
+#             rating=form.rating.data,
+#             comments=form.comment.data,
+#             is_active=True
+#         )
+#         db.session.add(review)
+#         db.session.commit()
+#         flash('Review Submitted Successfully...', 'review')
+#         return redirect(url_for('customer.product_details', product_id=product_id))
+#     for field, errors in form.errors.items():
+#         for error in errors:
+#             flash(f'Error in {field}: {error}', 'review')
+#     return redirect(url_for('customer.product_details', product_id=product_id))
 
 @customer_bp.route('/checkout', methods=['POST'])
 @login_required
@@ -398,3 +398,56 @@ def order_again(order_id):
         flash(f"An error occurred while adding items to the cart: {str(e)}", "cart")
     return redirect(url_for("customer.orders"))
 
+@customer_bp.route('/reviews/<int:order_id>', methods=['GET', 'POST'])
+@login_required
+def reviews(order_id):
+    if current_user.role_id != 3:
+        abort(403)
+    order = Order.query.filter_by(id=order_id, user_id=current_user.id).first_or_404()
+    if order.status != OrderStatus.SUCCESS:
+        flash("Only successful orders can be reviewed...", "review")
+        return redirect(url_for("customer.orders"))
+    submitted_product_id = request.form.get('product_id', type=int)
+    if request.method == 'POST' and submitted_product_id:
+        form = ReviewForm()
+        if form.validate_on_submit():
+            existing_review = Review.query.filter_by(
+                user_id=current_user.id,
+                product_id=submitted_product_id,
+                is_active=True
+            ).first()
+            if existing_review:
+                flash("You have already reviewed this product...", "review")
+            else:
+                try:
+                    new_review = Review(
+                        product_id=submitted_product_id,
+                        user_id=current_user.id,
+                        rating=form.rating.data,
+                        comments=form.comment.data,
+                        is_active=True
+                    )
+                    db.session.add(new_review)
+                    db.session.commit()
+                    flash("Review submitted successfully...", "review")
+                    return redirect(url_for('customer.reviews', order_id=order.id))
+                except Exception as e:
+                    db.session.rollback()
+                    flash(f"Error saving review: {str(e)}", "review")
+        else:
+            flash(f"Form validation failed: {form.errors}", "review")
+    review_forms = []
+    for item in order.order_items:
+        product = item.product
+        existing_review = Review.query.filter_by(
+            user_id=current_user.id,
+            product_id=product.id,
+            is_active=True
+        ).first()
+        form = ReviewForm()
+        form.product_id.data = product.id
+        if existing_review:
+            form.rating.data = existing_review.rating
+            form.comment.data = existing_review.comments
+        review_forms.append((product, form, existing_review))
+    return render_template("product/review_order.html", order=order, review_forms=review_forms)
