@@ -27,7 +27,7 @@ def connect_to_db():
         return None
 
 def extract_from_mysql():
-    """Extract relevant data from MySQL tables."""
+    """Extract relevant data from MySQL tables, excluding superuser (role_id=1)."""
     connection = connect_to_db()
     if not connection:
         return []
@@ -35,33 +35,43 @@ def extract_from_mysql():
     try:
         with connection.cursor() as cursor:
             # Extract products (only active products)
-            cursor.execute("SELECT name, description, price, quantity, available, category_id FROM products WHERE is_active = 1")
+            cursor.execute("SELECT p.id, p.name, p.description, p.price, p.quantity, p.available, p.category_id, c.name as category_name FROM products p JOIN categories c ON p.category_id = c.id WHERE p.is_active = 1")
             products = cursor.fetchall()
             product_data = [
-                f"Product: {p['name']}, Description: {p['description']}, Price: ${p['price']}, Quantity: {p['quantity']}, Available: {p['available']}, Category ID: {p['category_id']}"
+                f"Product ID: {p['id']}, Name: {p['name']}, Description: {p['description']}, Price: ${p['price']:.2f}, Quantity: {p['quantity']}, Available: {p['available']}, Category: {p['category_name']}, Link: /customer/clothes/{p['category_name']}"
                 for p in products
+            ]
+            
+            # Extract users (exclude superuser, role_id=1)
+            cursor.execute("SELECT id, fname, lname, gender, email, contact, address, city, state, role_id FROM users WHERE is_active = 1 AND role_id != 1")
+            users = cursor.fetchall()
+            user_data = [
+                f"User ID: {u['id']}, Name: {u['fname']} {u['lname']}, Gender: {u['gender']}, Email: {u['email']}, Contact: {u['contact'] or 'N/A'}, Address: {u['address'] or 'N/A'}, City: {u['city'] or 'N/A'}, State: {u['state'] or 'N/A'}, Role: {'PRODUCT MANAGER' if u['role_id'] == 2 else 'CUSTOMER'}"
+                for u in users
             ]
             
             # Extract categories
             cursor.execute("SELECT id, name FROM categories")
             categories = cursor.fetchall()
-            category_data = [f"Category: {c['name']}, ID: {c['id']}" for c in categories]
+            category_data = [f"Category: {c['name']}, ID: {c['id']}, Link: /customer/clothes/{c['name']}" for c in categories]
             
             # Extract discounts (only active discounts)
             cursor.execute("SELECT name, description, discount_type, value FROM discounts WHERE is_active = 1")
-
             discounts = cursor.fetchall()
             discount_data = [
                 f"Discount: {d['name']}, Description: {d['description']}, Type: {d['discount_type']}, Value: {d['value']}"
                 for d in discounts
             ]
             
-            # Extract user roles
-            cursor.execute("SELECT id, name FROM roles")
-            roles = cursor.fetchall()
-            role_data = [f"Role: {r['name']}, ID: {r['id']}" for r in roles]
+            # Extract orders (basic info)
+            cursor.execute("SELECT id, user_id, amount, status, created_at FROM orders WHERE status = 'SUCCESS'")
+            orders = cursor.fetchall()
+            order_data = [
+                f"Order ID: {o['id']}, User ID: {o['user_id']}, Amount: ${o['amount']:.2f}, Status: {o['status']}, Created At: {o['created_at']}"
+                for o in orders
+            ]
             
-        return product_data + category_data + discount_data + role_data
+        return product_data + user_data + category_data + discount_data + order_data
     except Exception as e:
         print(f"Error extracting from MySQL: {e}")
         return []
